@@ -1,0 +1,12 @@
+.Word {
+  letter-spacing: 1px;
+}
+
+.Type {
+  font-style: italic;
+  font-size: 16px;
+}
+
+.Translation {
+  font-size: 16px;
+}

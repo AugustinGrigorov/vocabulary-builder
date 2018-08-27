@@ -1,0 +1,39 @@
+.Card {
+  display: inline-flex;
+  margin: 10px;
+  vertical-align: top;
+  perspective: 1000px;
+}
+
+.Card--focused .Card-body {
+	transform: rotateY(180deg);
+}
+
+.Card, .Card-body, .Card-front, .Card-back {
+  width: 250px;
+  height: 300px;
+}
+
+.Card-body {
+	transition: 0.6s;
+	transform-style: preserve-3d;
+	position: relative;
+}
+
+.Card-front, .Card-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  backface-visibility: hidden;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.Card-front {
+	z-index: 2;
+}
+
+.Card-back {
+	transform: rotateY(180deg);
+}
