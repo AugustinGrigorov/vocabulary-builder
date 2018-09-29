@@ -1,0 +1,23 @@
+.Word {
+  letter-spacing: 1px;
+}
+
+.Type {
+  font-style: italic;
+  font-size: 16px;
+}
+
+.Definition {
+  font-size: 16px;
+}
+
+.AddWordForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.AddWordForm > * {
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+}
