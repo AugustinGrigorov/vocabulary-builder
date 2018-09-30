@@ -30,13 +30,13 @@ export function getWordsForUser(user) {
   };
 }
 
-export function addWordAction({ word, userId }) {
+export function addWordAction({ word, user }) {
   return (dispatch) => {
-    db.collection('users').doc(userId).collection('words').add({
+    db.collection('users').doc(user.uid).collection('words').add({
       ...word,
     })
       .then(() => {
-        dispatch(getWordsForUser(userId));
+        dispatch(getWordsForUser(user));
       })
       .catch((error) => {
         console.error('Error adding document: ', error);

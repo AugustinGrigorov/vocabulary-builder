@@ -21,7 +21,7 @@ class AddCard extends React.Component {
   handleSubmit(e) {
     const { addWord, user } = this.props;
     e.preventDefault();
-    addWord({ word: this.state, userId: user.uid });
+    addWord({ word: this.state, user });
   }
 
   handleChange(event) {
