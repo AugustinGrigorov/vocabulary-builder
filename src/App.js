@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import {
   signIn as signInAction,
   signOut as signOutAction,
@@ -10,6 +12,8 @@ import AddCard from './customComponents/AddCard';
 import WordCard from './customComponents/WordCard';
 import NavigationBar from './customComponents/NavigationBar';
 import './App.css';
+
+library.add(faCaretDown);
 
 class App extends Component {
   componentDidMount() {

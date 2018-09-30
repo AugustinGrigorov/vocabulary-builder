@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   signIn as signInAction,
   signOut as signOutAction,
@@ -12,10 +13,70 @@ function NavigationBar({ user, signIn, signOut }) {
     <nav className="TopNavigation">
       {
         user
-          ? <button type="button" className="AuthenticationButton" onClick={signOut}>Log Out</button>
-          : <button type="button" className="AuthenticationButton" onClick={signIn}>Log In</button>
+          ? <ProfileControls user={user} signOut={signOut} />
+          : <InteractiveButton text="Sign in" action={signIn} className="TopNavigation-SignInButton" />
       }
     </nav>
+  );
+}
+
+class ProfileControls extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showMenu: false,
+    };
+  }
+
+  render() {
+    const { showMenu } = this.state;
+    const { user, signOut } = this.props;
+    return (
+      <div
+        className="ProfileControls"
+        onMouseEnter={() => this.setState({ showMenu: true })}
+        onMouseLeave={() => this.setState({ showMenu: false })}
+      >
+        <div className="UserBadge">
+          <img
+            className="UserBadge-Avatar"
+            alt={user.displayName}
+            src={user.photoURL}
+          />
+          <span className="UserBadge-Name">
+            {user.displayName}
+            <FontAwesomeIcon className="UserBadge-Arrow" icon="caret-down" />
+          </span>
+        </div>
+        { showMenu
+          ? (
+            <div className="ProfileControls-Menu">
+              <ul>
+                <li className="ProfileControls-MenuItem">
+                  <InteractiveButton
+                    text="Sign out"
+                    action={signOut}
+                    className="ProfileControls-MenuButton"
+                  />
+                </li>
+              </ul>
+            </div>
+          ) : null
+        }
+      </div>
+    );
+  }
+}
+
+function InteractiveButton({ text, action, className }) {
+  return (
+    <button
+      className={className}
+      type="button"
+      onClick={action}
+    >
+      {text}
+    </button>
   );
 }
 
@@ -27,6 +88,21 @@ NavigationBar.propTypes = {
 
 NavigationBar.defaultProps = {
   user: null,
+};
+
+ProfileControls.propTypes = {
+  user: PropTypes.shape({}).isRequired,
+  signOut: PropTypes.func.isRequired,
+};
+
+InteractiveButton.propTypes = {
+  text: PropTypes.string.isRequired,
+  action: PropTypes.func.isRequired,
+  className: PropTypes.string,
+};
+
+InteractiveButton.defaultProps = {
+  className: null,
 };
 
 const mapDispatchToProps = dispatch => ({
