@@ -37,17 +37,7 @@ class ProfileControls extends Component {
         onMouseEnter={() => this.setState({ showMenu: true })}
         onMouseLeave={() => this.setState({ showMenu: false })}
       >
-        <div className="UserBadge">
-          <img
-            className="UserBadge-Avatar"
-            alt={user.displayName}
-            src={user.photoURL}
-          />
-          <span className="UserBadge-Name">
-            {user.displayName}
-            <FontAwesomeIcon className="UserBadge-Arrow" icon="caret-down" />
-          </span>
-        </div>
+        <UserBadge user={user} />
         { showMenu
           ? (
             <div className="ProfileControls-Menu">
@@ -66,6 +56,22 @@ class ProfileControls extends Component {
       </div>
     );
   }
+}
+
+function UserBadge({ user }) {
+  return (
+    <div className="UserBadge">
+      <img
+        className="UserBadge-Avatar"
+        alt={user.displayName}
+        src={user.photoURL}
+      />
+      <span className="UserBadge-Name">
+        {user.displayName}
+        <FontAwesomeIcon className="UserBadge-Arrow" icon="caret-down" />
+      </span>
+    </div>
+  );
 }
 
 function InteractiveButton({ text, action, className }) {
@@ -93,6 +99,10 @@ NavigationBar.defaultProps = {
 ProfileControls.propTypes = {
   user: PropTypes.shape({}).isRequired,
   signOut: PropTypes.func.isRequired,
+};
+
+UserBadge.propTypes = {
+  user: PropTypes.shape({}).isRequired,
 };
 
 InteractiveButton.propTypes = {
