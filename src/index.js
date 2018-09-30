@@ -11,7 +11,8 @@ import App from './App';
 
 import './index.css';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const reduxDevtoolsExtensionHook = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';
+const composeEnhancers = window[reduxDevtoolsExtensionHook] || compose;
 
 const store = createStore(
   rootReducer,

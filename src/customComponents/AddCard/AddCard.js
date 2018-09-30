@@ -69,8 +69,12 @@ class AddCard extends React.Component {
 }
 
 AddCard.propTypes = {
-  user: PropTypes.shape({}).isRequired,
+  user: PropTypes.shape({}),
   addWord: PropTypes.func.isRequired,
+};
+
+AddCard.defaultProps = {
+  user: null,
 };
 
 const mapStateToProps = state => ({

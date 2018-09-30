@@ -43,7 +43,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-  user: PropTypes.shape({}).isRequired,
+  user: PropTypes.shape({}),
   dictionary: PropTypes.arrayOf(PropTypes.shape({
     word: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
@@ -52,6 +52,10 @@ App.propTypes = {
   retrieveUser: PropTypes.func.isRequired,
   signIn: PropTypes.func.isRequired,
   signOut: PropTypes.func.isRequired,
+};
+
+App.defaultProps = {
+  user: null,
 };
 
 const mapDispatchToProps = dispatch => ({

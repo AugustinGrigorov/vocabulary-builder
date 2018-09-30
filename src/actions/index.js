@@ -19,7 +19,7 @@ export function getWordsForUser(userId) {
   return (dispatch) => {
     db.collection('users').doc(userId).collection('words').get()
       .then((querySnapshot) => {
-        dispatch(receiveWords(querySnapshot.docs.map(doc => doc.data())));
+        dispatch(receiveWords(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))));
       });
   };
 }
@@ -55,7 +55,7 @@ export function signIn() {
         dispatch(getWordsForUser(user.uid));
       })
       .catch((error) => {
-        console.log(error);
+        console.log('Error signing in: ', error);
       });
   };
 }
@@ -69,7 +69,7 @@ export function signOut() {
         dispatch(receiveWords([]));
       })
       .catch((error) => {
-        console.log(error);
+        console.log('Error signing out: ', error);
       });
   };
 }
