@@ -1,3 +1,5 @@
+// TODO: Handle errors properly
+
 import firebase, {
   auth,
   provider,
@@ -15,12 +17,16 @@ function receiveWords(words) {
   };
 }
 
-export function getWordsForUser(userId) {
+export function getWordsForUser(user) {
   return (dispatch) => {
-    db.collection('users').doc(userId).collection('words').get()
-      .then((querySnapshot) => {
-        dispatch(receiveWords(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))));
-      });
+    if (user && user.uid) {
+      db.collection('users').doc(user.uid).collection('words').get()
+        .then((querySnapshot) => {
+          dispatch(receiveWords(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))));
+        });
+    } else {
+      dispatch(receiveWords([]));
+    }
   };
 }
 
@@ -30,7 +36,6 @@ export function addWordAction({ word, userId }) {
       ...word,
     })
       .then(() => {
-        // TODO: Perhaps add the word to state to avoid ajax call
         dispatch(getWordsForUser(userId));
       })
       .catch((error) => {
@@ -47,40 +52,26 @@ function receiveUserDetails(user) {
 }
 
 export function signIn() {
-  return (dispatch) => {
-    auth
-      .signInWithPopup(provider)
-      .then(({ user }) => {
-        dispatch(receiveUserDetails(user));
-        dispatch(getWordsForUser(user.uid));
-      })
-      .catch((error) => {
-        console.log('Error signing in: ', error);
-      });
+  return () => {
+    auth.signInWithPopup(provider).catch((error) => {
+      console.log('Error signing in: ', error);
+    });
   };
 }
 
 export function signOut() {
-  return (dispatch) => {
-    auth
-      .signOut()
-      .then(() => {
-        dispatch(receiveUserDetails(null));
-        dispatch(receiveWords([]));
-      })
-      .catch((error) => {
-        console.log('Error signing out: ', error);
-      });
+  return () => {
+    auth.signOut().catch((error) => {
+      console.log('Error signing out: ', error);
+    });
   };
 }
 
-export function retrieveUser() {
+export function listenForAuthChanges() {
   return (dispatch) => {
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        dispatch(receiveUserDetails(user));
-        dispatch(getWordsForUser(user.uid));
-      }
+      dispatch(receiveUserDetails(user));
+      dispatch(getWordsForUser(user));
     });
   };
 }

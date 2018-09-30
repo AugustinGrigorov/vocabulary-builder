@@ -4,35 +4,25 @@ import PropTypes from 'prop-types';
 import {
   signIn as signInAction,
   signOut as signOutAction,
-  retrieveUser as retrieveUserAction,
+  listenForAuthChanges as listenForAuthChangesAction,
 } from './actions';
 import AddCard from './customComponents/AddCard';
 import WordCard from './customComponents/WordCard';
+import NavigationBar from './customComponents/NavigationBar';
 import './App.css';
 
 class App extends Component {
   componentDidMount() {
-    const { retrieveUser } = this.props;
-    retrieveUser();
+    const { listenForAuthChanges } = this.props;
+    listenForAuthChanges();
   }
 
   render() {
-    const {
-      dictionary,
-      user,
-      signOut,
-      signIn,
-    } = this.props;
+    const { dictionary } = this.props;
 
     return (
       <div className="App">
-        <nav className="TopNavigation">
-          {
-            user
-              ? <button type="button" className="AuthenticationButton" onClick={signOut}>Log Out</button>
-              : <button type="button" className="AuthenticationButton" onClick={signIn}>Log In</button>
-          }
-        </nav>
+        <NavigationBar />
         <AddCard />
         {dictionary.map(entry => (
           <WordCard key={entry.id} entry={entry} />
@@ -43,30 +33,22 @@ class App extends Component {
 }
 
 App.propTypes = {
-  user: PropTypes.shape({}),
   dictionary: PropTypes.arrayOf(PropTypes.shape({
     word: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     definition: PropTypes.string.isRequired,
   })).isRequired,
-  retrieveUser: PropTypes.func.isRequired,
-  signIn: PropTypes.func.isRequired,
-  signOut: PropTypes.func.isRequired,
-};
-
-App.defaultProps = {
-  user: null,
+  listenForAuthChanges: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-  retrieveUser: () => dispatch(retrieveUserAction()),
+  listenForAuthChanges: () => dispatch(listenForAuthChangesAction()),
   signIn: () => dispatch(signInAction()),
   signOut: () => dispatch(signOutAction()),
 });
 
 const mapStateToProps = state => ({
   dictionary: state.dictionary,
-  user: state.user,
 });
 
 export default connect(
