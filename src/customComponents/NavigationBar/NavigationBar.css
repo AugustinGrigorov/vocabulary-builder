@@ -1,7 +1,11 @@
+/* TODO: Refactor css here */
+
 .TopNavigation {
-  background-color: #2196F3;
+  position: relative;
+  background-color: #388E3C;
   width: 100%;
   display: flex;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 
 .ProfileControls {
@@ -48,13 +52,11 @@
 
 .ProfileControls-MenuItem {
   list-style: none;
-  font-weight: bold;
-  color: #00b0ff;
 }
 
 .ProfileControls-MenuButton {
   font-weight: bold;
-  color: #00b0ff;
+  color: #66BB6A;
   border: none;
   font-size: 16px;
 }
@@ -71,4 +73,16 @@
   font-size: 18px;
   font-weight: bold;
   color: #fff;
+}
+
+.TopNavigation-Link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
 }

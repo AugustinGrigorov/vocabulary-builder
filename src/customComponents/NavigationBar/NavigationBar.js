@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   signIn as signInAction,
@@ -11,6 +12,24 @@ import './NavigationBar.css';
 function NavigationBar({ user, signIn, signOut }) {
   return (
     <nav className="TopNavigation">
+      <Link
+        className="TopNavigation-Link"
+        to="/"
+      >
+        Home
+      </Link>
+      {
+        user ? (
+          <Fragment>
+            <Link
+              className="TopNavigation-Link"
+              to="/gallery"
+            >
+              Gallery
+            </Link>
+          </Fragment>
+        ) : null
+      }
       {
         user
           ? <ProfileControls user={user} signOut={signOut} />

@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
@@ -8,12 +9,35 @@ import {
   signOut as signOutAction,
   listenForAuthChanges as listenForAuthChangesAction,
 } from './actions';
-import AddCard from './customComponents/AddCard';
-import WordCard from './customComponents/WordCard';
 import NavigationBar from './customComponents/NavigationBar';
+import Home from './views/Home';
+import Gallery from './views/Gallery';
 import './App.css';
 
 library.add(faCaretDown);
+
+const PrivateRoute = ({
+  component: View,
+  user,
+  signIn,
+  ...rest
+}) => (
+  <Route
+    {...rest}
+    render={props => (user
+      ? (
+        <View {...props} />
+      ) : (
+        <button
+          type="button"
+          onClick={signIn}
+        >
+          Sign in
+        </button>
+      ))
+    }
+  />
+);
 
 class App extends Component {
   componentDidMount() {
@@ -22,27 +46,29 @@ class App extends Component {
   }
 
   render() {
-    const { dictionary } = this.props;
-
+    const { user, signIn } = this.props;
     return (
       <div className="App">
-        <NavigationBar />
-        <AddCard />
-        {dictionary.map(entry => (
-          <WordCard key={entry.id} entry={entry} />
-        ))}
+        <Router>
+          <Fragment>
+            <NavigationBar />
+            <Route exact path="/" component={Home} />
+            <PrivateRoute user={user} signIn={signIn} exact path="/gallery" component={Gallery} />
+          </Fragment>
+        </Router>
       </div>
     );
   }
 }
 
 App.propTypes = {
-  dictionary: PropTypes.arrayOf(PropTypes.shape({
-    word: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    definition: PropTypes.string.isRequired,
-  })).isRequired,
   listenForAuthChanges: PropTypes.func.isRequired,
+  signIn: PropTypes.func.isRequired,
+  user: PropTypes.shape({}),
+};
+
+App.defaultProps = {
+  user: null,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -52,7 +78,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  dictionary: state.dictionary,
+  user: state.user,
 });
 
 export default connect(
