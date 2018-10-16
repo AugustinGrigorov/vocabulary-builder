@@ -1,28 +1,19 @@
 const dictionary = (state = {
   initialized: false,
-  fetching: false,
   data: [],
-  error: false,
+  errors: [],
 }, action) => {
   switch (action.type) {
-    case 'FETCH_DICTIONARY_REQUEST':
-      return {
-        ...state,
-        fetching: true,
-        error: false,
-      };
     case 'RECEIVE_DICTIONARY':
       return {
-        fetching: false,
+        ...state,
         data: action.dictionary,
         initialized: true,
-        error: false,
       };
     case 'DICTIONARY_REQUEST_FAILED':
       return {
         ...state,
-        fetching: false,
-        error: true,
+        errors: [...state.errors, action.error],
       };
     default:
       return state;

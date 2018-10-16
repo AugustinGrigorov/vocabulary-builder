@@ -29,13 +29,13 @@ class Gallery extends Component {
 
 Gallery.propTypes = {
   dictionary: PropTypes.shape({
-    fetching: PropTypes.bool,
+    initialized: PropTypes.bool,
     data: PropTypes.arrayOf(PropTypes.shape({
       word: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
       definition: PropTypes.string.isRequired,
     })),
-    error: PropTypes.bool,
+    // errors: PropTypes.array,
   }).isRequired,
 };
 

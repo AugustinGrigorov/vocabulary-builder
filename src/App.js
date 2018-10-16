@@ -30,8 +30,8 @@ const PrivateRoute = ({
     render={
       (props) => {
         if (user.fetching) return <Loading />;
-        if (!user.details) return <Error error="Not logged in" />;
-        if (dictionary.error) return <Error error="Error fetching dictionary" />;
+        if (!user.details) return <Error message="Not logged in." />;
+        if (dictionary.error) return <Error message="Fetching dictionary failed." />;
         return <View {...props} />;
       }
     }

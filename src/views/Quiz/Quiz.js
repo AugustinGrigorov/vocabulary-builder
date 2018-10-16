@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import {
   nextWordFrom as nextWordFromAction,
   fetchDictionaryForUser as fetchDictionaryForUserAction,
-  quizSetupFailed as quizSetupFailedAction
+  quizSetupFailed as quizSetupFailedAction,
 } from '../../actions';
 import { Error, Loading } from '../genericViews';
 import './Quiz.css';
@@ -33,19 +33,15 @@ class Quiz extends Component {
       dictionary,
       fetchDictionaryForUser,
       user,
-      quizSetupFailed,
     } = this.props;
-    if (dictionary.initialized) {
-      if (dictionary.data.length) nextWordFrom(dictionary.data);
-      else quizSetupFailed('Dictionary is empty');
-    } else fetchDictionaryForUser(user);
+    if (!dictionary.initialized) fetchDictionaryForUser(user);
+    if (dictionary.data.length) nextWordFrom(dictionary.data);
   }
 
   componentDidUpdate(prevProps) {
-    const { nextWordFrom, dictionary, quizSetupFailed } = this.props;
-    if (dictionary !== prevProps.dictionary && dictionary.initialized) {
-      if (dictionary.data.length) nextWordFrom(dictionary.data);
-      else quizSetupFailed('Dictionary is empty');
+    const { nextWordFrom, dictionary } = this.props;
+    if (dictionary !== prevProps.dictionary && dictionary.initialized && dictionary.data.length) {
+      nextWordFrom(dictionary.data);
     }
   }
 
@@ -75,9 +71,9 @@ class Quiz extends Component {
 
   render() {
     const { grade, submission } = this.state;
-    const { currentEntry, quizInitialized, quizError } = this.props;
-    if (quizError) return <Error />;
-    if (!quizInitialized) return <Loading />;
+    const { currentEntry, dictionary } = this.props;
+    if (dictionary.initialized && !dictionary.data.length) return <Error message="No words in dictionary." />;
+    if (!dictionary.initialized) return <Loading />;
     if (!currentEntry) return <p>Well done</p>;
     return (
       <div className={`QuizBox QuizBox--${grade}`}>
@@ -146,7 +142,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   fetchDictionaryForUser: user => dispatch(fetchDictionaryForUserAction(user)),
   nextWordFrom: dictionary => dispatch(nextWordFromAction(dictionary)),
-  quizSetupFailed: () => dispatch(quizSetupFailedAction()),
 });
 
 export default connect(

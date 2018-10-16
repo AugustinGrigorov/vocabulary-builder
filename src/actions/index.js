@@ -11,12 +11,6 @@ db.settings({
   timestampsInSnapshots: true,
 });
 
-function requestDictionary() {
-  return {
-    type: 'FETCH_DICTIONARY_REQUEST',
-  };
-}
-
 function receiveDictionary(dictionary) {
   return {
     type: 'RECEIVE_DICTIONARY',
@@ -24,15 +18,15 @@ function receiveDictionary(dictionary) {
   };
 }
 
-function dictionaryRequestFailed() {
+function dictionaryRequestFailed(error) {
   return {
     type: 'DICTIONARY_REQUEST_FAILED',
+    error,
   };
 }
 
 export function fetchDictionaryForUser({ details }) {
   return (dispatch) => {
-    dispatch(requestDictionary());
     if (details && details.uid) {
       db.collection('users').doc(details.uid).collection('words').get()
         .then((querySnapshot) => {
@@ -41,7 +35,7 @@ export function fetchDictionaryForUser({ details }) {
             id: doc.id,
           }))));
         })
-        .catch(() => dispatch(dictionaryRequestFailed()));
+        .catch(error => dispatch(dictionaryRequestFailed(error)));
     } else {
       dispatch(receiveDictionary([]));
     }
@@ -54,9 +48,7 @@ export function addWordAction({ word, user }) {
       .then(() => {
         dispatch(fetchDictionaryForUser(user)); // Cancel old request if new one becomes in flight
       })
-      .catch((error) => {
-        console.error('Error adding document: ', error);
-      });
+      .catch(error => dispatch(dictionaryRequestFailed(error)));
   };
 }
 

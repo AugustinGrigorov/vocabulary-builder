@@ -1,6 +1,4 @@
 const quiz = (state = {
-  initialized: false,
-  error: false,
   wordQueue: [],
 }, action) => {
   switch (action.type) {
@@ -13,12 +11,6 @@ const quiz = (state = {
       return {
         ...state,
         currentEntry: action.entry,
-        initialized: true,
-      };
-    case 'QUIZ_SETUP_FAILED':
-      return {
-        ...state,
-        error: true,
       };
     default:
       return state;
