@@ -1,13 +1,9 @@
-// TODO: When no entries in the beginning
-// TODO: When finish
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   nextWordFrom as nextWordFromAction,
   fetchDictionaryForUser as fetchDictionaryForUserAction,
-  quizSetupFailed as quizSetupFailedAction,
 } from '../../actions';
 import { Error, Loading } from '../genericViews';
 import './Quiz.css';
@@ -75,6 +71,7 @@ class Quiz extends Component {
     if (dictionary.initialized && !dictionary.data.length) return <Error message="No words in dictionary." />;
     if (!dictionary.initialized) return <Loading />;
     if (!currentEntry) return <p>Well done</p>;
+    // TODO: Refactor this render
     return (
       <div className={`QuizBox QuizBox--${grade}`}>
         {currentEntry
@@ -116,11 +113,13 @@ Quiz.propTypes = {
     })),
     error: PropTypes.bool,
   }).isRequired,
+  user: PropTypes.shape({}).isRequired,
+  fetchDictionaryForUser: PropTypes.func.isRequired,
   wordQueue: PropTypes.arrayOf(PropTypes.shape({
     word: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     definition: PropTypes.string.isRequired,
-  })),
+  })).isRequired,
   currentEntry: PropTypes.shape({
     word: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
@@ -129,9 +128,11 @@ Quiz.propTypes = {
   nextWordFrom: PropTypes.func.isRequired,
 };
 
+Quiz.defaultProps = {
+  currentEntry: null,
+};
+
 const mapStateToProps = state => ({
-  quizError: state.quiz.error,
-  quizInitialized: state.quiz.initialized,
   currentEntry: state.quiz.currentEntry,
   wordQueue: state.quiz.wordQueue,
   dictionary: state.dictionary,
