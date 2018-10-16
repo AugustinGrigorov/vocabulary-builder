@@ -1,0 +1,17 @@
+.QuizBox {
+  border: 1px solid #ccc;
+  width: 600px;
+  margin: 24px auto;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.QuizBox--correct {
+  background-color: #8BC34A;
+}
+
+.QuizBox--incorrect {
+  background-color: #DD2C00;
+}

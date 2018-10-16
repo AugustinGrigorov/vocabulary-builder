@@ -5,14 +5,16 @@ import { addWordAction } from '../../actions';
 import Card from '../../genericComponents/Card';
 import './AddCard.css';
 
+const initialState = {
+  word: '',
+  type: 'noun',
+  definition: '',
+};
+
 class AddCard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      word: '',
-      type: 'noun',
-      definition: '',
-    };
+    this.state = initialState;
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,6 +24,7 @@ class AddCard extends React.Component {
     const { addWord, user } = this.props;
     e.preventDefault();
     addWord({ word: this.state, user });
+    this.setState(initialState);
   }
 
   handleChange(event) {
