@@ -44,25 +44,38 @@ class AddCard extends React.Component {
         back={
           (
             <form onSubmit={this.handleSubmit} className="AddWordForm">
-              <label htmlFor="word">
-                Word:
-                <input id="word" name="word" type="text" value={word} onChange={this.handleChange} />
-              </label>
-              <label htmlFor="type">
-                Type:
-                <select id="type" name="type" value={type} onChange={this.handleChange}>
-                  <option value="noun">noun</option>
-                  <option value="verb">verb</option>
-                  <option value="adjective">adjective</option>
-                  <option value="adverb">adverb</option>
-                  <option value="other">other</option>
-                </select>
-              </label>
-              <label htmlFor="definition">
-                Definition:
-                <input id="definition" name="definition" type="text" value={definition} onChange={this.handleChange} />
-              </label>
-              <input type="submit" value="Submit" />
+              <input
+                id="word"
+                className="AddWordForm-Input"
+                name="word"
+                type="text"
+                placeholder="Type word"
+                value={word}
+                onChange={this.handleChange}
+              />
+              <select
+                id="type"
+                className="AddWordForm-Select"
+                name="type"
+                value={type}
+                onChange={this.handleChange}
+              >
+                <option value="noun">noun</option>
+                <option value="verb">verb</option>
+                <option value="adjective">adjective</option>
+                <option value="adverb">adverb</option>
+                <option value="other">other</option>
+              </select>
+              <input
+                id="definition"
+                className="AddWordForm-Input"
+                name="definition"
+                type="text"
+                placeholder="Enter definition"
+                value={definition}
+                onChange={this.handleChange}
+              />
+              <input className="AddWordForm-Submit" type="submit" value="Submit" />
             </form>
           )
         }

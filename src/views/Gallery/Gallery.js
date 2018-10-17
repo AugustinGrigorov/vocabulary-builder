@@ -5,6 +5,7 @@ import { fetchDictionaryForUser as fetchDictionaryForUserAction } from '../../ac
 import { dictionaryType, userType } from '../../types';
 import AddCard from '../../customComponents/AddCard';
 import WordCard from '../../customComponents/WordCard';
+import './Gallery.css';
 
 class Gallery extends Component {
   componentDidMount() {
@@ -16,7 +17,7 @@ class Gallery extends Component {
     const { dictionary } = this.props;
 
     return (
-      <div>
+      <div className="Gallery">
         <AddCard />
         {dictionary.data.map(entry => (
           <WordCard key={entry.id} entry={entry} />

@@ -86,3 +86,12 @@
   color: #fff;
   text-decoration: none;
 }
+
+@media screen and (max-width: 520px) {
+  .UserBadge-Name {
+    display: none;
+  }
+  .ProfileControls-Menu {
+    left: auto;
+  }
+}

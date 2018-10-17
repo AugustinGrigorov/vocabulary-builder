@@ -9,9 +9,9 @@
 	transform: rotateY(180deg);
 }
 
-.Card, .Card-body, .Card-front, .Card-back {
-  width: 250px;
-  height: 300px;
+.Card, .Card-front, .Card-back {
+  width: 240px;
+  height: 320px;
 }
 
 .Card-body {

@@ -93,8 +93,8 @@ function UserBadge({ userDetails }) {
       />
       <span className="UserBadge-Name">
         {userDetails.displayName}
-        <FontAwesomeIcon className="UserBadge-Arrow" icon="caret-down" />
       </span>
+      <FontAwesomeIcon className="UserBadge-Arrow" icon="caret-down" />
     </div>
   );
 }
