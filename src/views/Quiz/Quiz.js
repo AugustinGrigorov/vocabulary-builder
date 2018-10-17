@@ -75,13 +75,21 @@ class Quiz extends Component {
       <div className={`QuizBox QuizBox--${grade}`}>
         {currentEntry
           ? (
-            <form onSubmit={this.handleSubmit} className="AddWordForm">
+            <form
+              className="QuizBox-Form"
+              onSubmit={this.handleSubmit}
+            >
               <h2>{currentEntry.word}</h2>
-              <label htmlFor="definition">
-                Definition:
-                <input id="submission" name="submission" type="text" onChange={this.handleChange} value={submission} />
-              </label>
-              <input type="submit" value="Submit" />
+              <input
+                id="submission"
+                className="QuizBox-Answer"
+                name="submission"
+                placeholder="Answer"
+                type="text"
+                onChange={this.handleChange}
+                value={submission}
+              />
+              <input className="QuizBox-Submit" type="submit" value="Submit" />
               <NextStep
                 grade={grade}
                 loadNextWord={this.loadNextWord}
@@ -98,9 +106,9 @@ class Quiz extends Component {
 function NextStep({ grade, loadNextWord, revealWord }) {
   switch (grade) {
     case 'correct':
-      return <button type="button" onClick={loadNextWord}>Next word!</button>;
+      return <button className="QuizBox-Next" type="button" onClick={loadNextWord}>Next word</button>;
     case 'incorrect':
-      return <button type="button" onClick={revealWord}>Reveal!</button>;
+      return <button className="QuizBox-Reveal" type="button" onClick={revealWord}>Reveal</button>;
     default:
       return null;
   }
