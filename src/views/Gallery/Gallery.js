@@ -1,32 +1,53 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { fetchDictionaryForUser as fetchDictionaryForUserAction } from '../../actions';
 import AddCard from '../../customComponents/AddCard';
 import WordCard from '../../customComponents/WordCard';
 
-function Gallery({ dictionary }) {
-  return (
-    <div>
-      <AddCard />
-      {dictionary.map(entry => (
-        <WordCard key={entry.id} entry={entry} />
-      ))}
-    </div>
-  );
+class Gallery extends Component {
+  componentDidMount() {
+    const { dictionary, user, fetchDictionaryForUser } = this.props;
+    if (!dictionary.initialized) fetchDictionaryForUser(user);
+  }
+
+  render() {
+    const { dictionary } = this.props;
+
+    return (
+      <div>
+        <AddCard />
+        {dictionary.data.map(entry => (
+          <WordCard key={entry.id} entry={entry} />
+        ))}
+      </div>
+    );
+  }
 }
 
 Gallery.propTypes = {
-  dictionary: PropTypes.arrayOf(PropTypes.shape({
-    word: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    definition: PropTypes.string.isRequired,
-  })).isRequired,
+  dictionary: PropTypes.shape({
+    initialized: PropTypes.bool,
+    data: PropTypes.arrayOf(PropTypes.shape({
+      word: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      definition: PropTypes.string.isRequired,
+    })),
+  }).isRequired,
+  fetchDictionaryForUser: PropTypes.func.isRequired,
+  user: PropTypes.shape({}).isRequired,
 };
 
 const mapStateToProps = state => ({
   dictionary: state.dictionary,
+  user: state.user,
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchDictionaryForUser: user => dispatch(fetchDictionaryForUserAction(user)),
 });
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(Gallery);

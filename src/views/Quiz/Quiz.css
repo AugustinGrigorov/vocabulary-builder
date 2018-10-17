@@ -1,0 +1,19 @@
+.QuizBox {
+  border: 1px solid #ccc;
+  width: 600px;
+  margin: 24px auto;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.QuizBox--correct {
+  background-color: #00E676;
+  border: 2px solid #00C853;
+}
+
+.QuizBox--incorrect {
+  background-color: #EF9A9A;
+  border: 2px solid #E57373;
+}

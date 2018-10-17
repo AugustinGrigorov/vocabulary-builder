@@ -1,5 +1,3 @@
-// TODO: Handle errors properly
-
 import firebase, {
   auth,
   provider,
@@ -10,59 +8,80 @@ db.settings({
   timestampsInSnapshots: true,
 });
 
-function receiveWords(words) {
+function receiveDictionary(dictionary) {
   return {
-    type: 'RECEIVE_WORDS',
-    words,
+    type: 'RECEIVE_DICTIONARY',
+    dictionary,
   };
 }
 
-export function getWordsForUser(user) {
+function dictionaryRequestFailed(error) {
+  return {
+    type: 'DICTIONARY_REQUEST_FAILED',
+    error,
+  };
+}
+
+export function fetchDictionaryForUser({ details }) {
   return (dispatch) => {
-    if (user && user.uid) {
-      db.collection('users').doc(user.uid).collection('words').get()
+    if (details && details.uid) {
+      db.collection('users').doc(details.uid).collection('words').get()
         .then((querySnapshot) => {
-          dispatch(receiveWords(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))));
-        });
+          dispatch(receiveDictionary(querySnapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id,
+          }))));
+        })
+        .catch(error => dispatch(dictionaryRequestFailed(error)));
     } else {
-      dispatch(receiveWords([]));
+      dispatch(receiveDictionary([]));
     }
   };
 }
 
 export function addWordAction({ word, user }) {
   return (dispatch) => {
-    db.collection('users').doc(user.uid).collection('words').add({
-      ...word,
-    })
+    db.collection('users').doc(user.details.uid).collection('words').add(word)
       .then(() => {
-        dispatch(getWordsForUser(user));
+        dispatch(fetchDictionaryForUser(user)); // Cancel old request if new one becomes in flight
       })
-      .catch((error) => {
-        console.error('Error adding document: ', error);
-      });
+      .catch(error => dispatch(dictionaryRequestFailed(error)));
   };
 }
 
-function receiveUserDetails(user) {
+function requestUserDetails() {
   return {
-    type: 'RECEIVE_LOGIN_DETAILS',
-    user,
+    type: 'FETCH_USER_DETAILS_REQUEST',
+  };
+}
+
+function receiveUserDetails(userDetails) {
+  return {
+    type: 'RECEIVE_USER_DETAILS',
+    userDetails,
+  };
+}
+
+function userDetailsRequestFailed() {
+  return {
+    type: 'USER_DETAILS_REQUEST_FAILED',
   };
 }
 
 export function signIn() {
-  return () => {
-    auth.signInWithPopup(provider).catch((error) => {
-      console.log('Error signing in: ', error);
+  return (dispatch) => {
+    dispatch(requestUserDetails());
+    auth.signInWithPopup(provider).catch(() => {
+      dispatch(userDetailsRequestFailed());
     });
   };
 }
 
 export function signOut() {
-  return () => {
-    auth.signOut().catch((error) => {
-      console.log('Error signing out: ', error);
+  return (dispatch) => {
+    dispatch(requestUserDetails());
+    auth.signOut().catch(() => {
+      dispatch(userDetailsRequestFailed());
     });
   };
 }
@@ -71,7 +90,33 @@ export function listenForAuthChanges() {
   return (dispatch) => {
     auth.onAuthStateChanged((user) => {
       dispatch(receiveUserDetails(user));
-      dispatch(getWordsForUser(user));
-    });
+    }, () => userDetailsRequestFailed());
+  };
+}
+
+function setQuizQueue(queue) {
+  return {
+    type: 'SET_QUIZ_QUEUE',
+    queue,
+  };
+}
+
+function setCurrentQuizEntry(entry) {
+  return {
+    type: 'SET_CURRENT_QUIZ_ENTRY',
+    entry,
+  };
+}
+
+export function nextWordFrom(currentWords) {
+  return (dispatch) => {
+    const wordPosition = Math.floor(currentWords.length * Math.random());
+    const selectedWord = currentWords[wordPosition];
+    const remainingWords = [
+      ...currentWords.slice(0, wordPosition),
+      ...currentWords.slice(wordPosition + 1),
+    ];
+    dispatch(setQuizQueue(remainingWords));
+    dispatch(setCurrentQuizEntry(selectedWord));
   };
 }

@@ -12,6 +12,8 @@ import {
 import NavigationBar from './customComponents/NavigationBar';
 import Home from './views/Home';
 import Gallery from './views/Gallery';
+import Quiz from './views/Quiz';
+import { Error, Loading } from './views/genericViews';
 import './App.css';
 
 library.add(faCaretDown);
@@ -19,22 +21,19 @@ library.add(faCaretDown);
 const PrivateRoute = ({
   component: View,
   user,
+  dictionary,
   signIn,
   ...rest
 }) => (
   <Route
     {...rest}
-    render={props => (user
-      ? (
-        <View {...props} />
-      ) : (
-        <button
-          type="button"
-          onClick={signIn}
-        >
-          Sign in
-        </button>
-      ))
+    render={
+      (props) => {
+        if (user.fetching) return <Loading />;
+        if (!user.details) return <Error message="Not logged in." />;
+        if (dictionary.error) return <Error message="Fetching dictionary failed." />;
+        return <View {...props} />;
+      }
     }
   />
 );
@@ -46,14 +45,29 @@ class App extends Component {
   }
 
   render() {
-    const { user, signIn } = this.props;
+    const { user, signIn, dictionary } = this.props;
     return (
       <div className="App">
         <Router>
           <Fragment>
             <NavigationBar />
             <Route exact path="/" component={Home} />
-            <PrivateRoute user={user} signIn={signIn} exact path="/gallery" component={Gallery} />
+            <PrivateRoute
+              user={user}
+              dictionary={dictionary}
+              signIn={signIn}
+              exact
+              path="/gallery"
+              component={Gallery}
+            />
+            <PrivateRoute
+              user={user}
+              dictionary={dictionary}
+              signIn={signIn}
+              exact
+              path="/quiz"
+              component={Quiz}
+            />
           </Fragment>
         </Router>
       </div>
@@ -62,6 +76,15 @@ class App extends Component {
 }
 
 App.propTypes = {
+  dictionary: PropTypes.shape({
+    fetching: PropTypes.bool,
+    data: PropTypes.arrayOf(PropTypes.shape({
+      word: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      definition: PropTypes.string.isRequired,
+    })),
+    error: PropTypes.bool,
+  }).isRequired,
   listenForAuthChanges: PropTypes.func.isRequired,
   signIn: PropTypes.func.isRequired,
   user: PropTypes.shape({}),
@@ -79,6 +102,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   user: state.user,
+  dictionary: state.dictionary,
 });
 
 export default connect(

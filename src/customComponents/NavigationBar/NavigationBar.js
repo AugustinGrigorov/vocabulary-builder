@@ -19,7 +19,7 @@ function NavigationBar({ user, signIn, signOut }) {
         Home
       </Link>
       {
-        user ? (
+        user.details ? (
           <Fragment>
             <Link
               className="TopNavigation-Link"
@@ -27,12 +27,18 @@ function NavigationBar({ user, signIn, signOut }) {
             >
               Gallery
             </Link>
+            <Link
+              className="TopNavigation-Link"
+              to="/quiz"
+            >
+              Quiz
+            </Link>
           </Fragment>
         ) : null
       }
       {
-        user
-          ? <ProfileControls user={user} signOut={signOut} />
+        user.details
+          ? <ProfileControls userDetails={user.details} signOut={signOut} />
           : <InteractiveButton text="Sign in" action={signIn} className="TopNavigation-SignInButton" />
       }
     </nav>
@@ -49,14 +55,14 @@ class ProfileControls extends Component {
 
   render() {
     const { showMenu } = this.state;
-    const { user, signOut } = this.props;
+    const { userDetails, signOut } = this.props;
     return (
       <div
         className="ProfileControls"
         onMouseEnter={() => this.setState({ showMenu: true })}
         onMouseLeave={() => this.setState({ showMenu: false })}
       >
-        <UserBadge user={user} />
+        <UserBadge userDetails={userDetails} />
         { showMenu
           ? (
             <div className="ProfileControls-Menu">
@@ -77,16 +83,16 @@ class ProfileControls extends Component {
   }
 }
 
-function UserBadge({ user }) {
+function UserBadge({ userDetails }) {
   return (
     <div className="UserBadge">
       <img
         className="UserBadge-Avatar"
-        alt={user.displayName}
-        src={user.photoURL}
+        alt={userDetails.displayName}
+        src={userDetails.photoURL}
       />
       <span className="UserBadge-Name">
-        {user.displayName}
+        {userDetails.displayName}
         <FontAwesomeIcon className="UserBadge-Arrow" icon="caret-down" />
       </span>
     </div>
@@ -116,12 +122,12 @@ NavigationBar.defaultProps = {
 };
 
 ProfileControls.propTypes = {
-  user: PropTypes.shape({}).isRequired,
+  userDetails: PropTypes.shape({}).isRequired,
   signOut: PropTypes.func.isRequired,
 };
 
 UserBadge.propTypes = {
-  user: PropTypes.shape({}).isRequired,
+  userDetails: PropTypes.shape({}).isRequired,
 };
 
 InteractiveButton.propTypes = {
