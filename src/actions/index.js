@@ -108,12 +108,6 @@ function setCurrentQuizEntry(entry) {
   };
 }
 
-export function quizSetupFailed() {
-  return {
-    type: 'QUIZ_SETUP_FAILED',
-  };
-}
-
 export function nextWordFrom(currentWords) {
   return (dispatch) => {
     const wordPosition = Math.floor(currentWords.length * Math.random());
