@@ -14,8 +14,6 @@ class Gallery extends Component {
   render() {
     const { dictionary } = this.props;
 
-    // TODO: Make this show when it's loading and add words to the state before sending network request.
-
     return (
       <div>
         <AddCard />
@@ -35,8 +33,9 @@ Gallery.propTypes = {
       type: PropTypes.string.isRequired,
       definition: PropTypes.string.isRequired,
     })),
-    // errors: PropTypes.array,
   }).isRequired,
+  fetchDictionaryForUser: PropTypes.func.isRequired,
+  user: PropTypes.shape({}).isRequired,
 };
 
 const mapStateToProps = state => ({

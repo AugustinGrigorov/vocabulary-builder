@@ -9,9 +9,11 @@
 }
 
 .QuizBox--correct {
-  background-color: #8BC34A;
+  background-color: #00E676;
+  border: 2px solid #00C853;
 }
 
 .QuizBox--incorrect {
-  background-color: #DD2C00;
+  background-color: #EF9A9A;
+  border: 2px solid #E57373;
 }

@@ -1,6 +1,3 @@
-// TODO: Handle errors properly
-// TODO: Revisit variable naming
-
 import firebase, {
   auth,
   provider,

@@ -10,7 +10,6 @@ import './Quiz.css';
 
 const initialState = {
   submission: '',
-  grade: null, // TODO: Maybe change that
 };
 
 class Quiz extends Component {
@@ -71,7 +70,6 @@ class Quiz extends Component {
     if (dictionary.initialized && !dictionary.data.length) return <Error message="No words in dictionary." />;
     if (!dictionary.initialized) return <Loading />;
     if (!currentEntry) return <p>Well done</p>;
-    // TODO: Refactor this render
     return (
       <div className={`QuizBox QuizBox--${grade}`}>
         {currentEntry
@@ -83,23 +81,27 @@ class Quiz extends Component {
                 <input id="submission" name="submission" type="text" onChange={this.handleChange} value={submission} />
               </label>
               <input type="submit" value="Submit" />
-              {
-                (() => {
-                  switch (grade) {
-                    case 'correct':
-                      return <button type="button" onClick={this.loadNextWord}>Next word!</button>;
-                    case 'incorrect':
-                      return <button type="button" onClick={this.revealWord}>Reveal!</button>;
-                    default:
-                      return null;
-                  }
-                })()
-              }
+              <NextStep
+                grade={grade}
+                loadNextWord={this.loadNextWord}
+                revealWord={this.revealWord}
+              />
             </form>
           ) : null
         }
       </div>
     );
+  }
+}
+
+function NextStep({ grade, loadNextWord, revealWord }) {
+  switch (grade) {
+    case 'correct':
+      return <button type="button" onClick={loadNextWord}>Next word!</button>;
+    case 'incorrect':
+      return <button type="button" onClick={revealWord}>Reveal!</button>;
+    default:
+      return null;
   }
 }
 
