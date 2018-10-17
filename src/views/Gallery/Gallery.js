@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fetchDictionaryForUser as fetchDictionaryForUserAction } from '../../actions';
+import { dictionaryType, userType } from '../../types';
 import AddCard from '../../customComponents/AddCard';
 import WordCard from '../../customComponents/WordCard';
 
@@ -26,16 +27,9 @@ class Gallery extends Component {
 }
 
 Gallery.propTypes = {
-  dictionary: PropTypes.shape({
-    initialized: PropTypes.bool,
-    data: PropTypes.arrayOf(PropTypes.shape({
-      word: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      definition: PropTypes.string.isRequired,
-    })),
-  }).isRequired,
+  dictionary: dictionaryType.isRequired,
   fetchDictionaryForUser: PropTypes.func.isRequired,
-  user: PropTypes.shape({}).isRequired,
+  user: userType.isRequired,
 };
 
 const mapStateToProps = state => ({

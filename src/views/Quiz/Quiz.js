@@ -5,6 +5,7 @@ import {
   nextWordFrom as nextWordFromAction,
   fetchDictionaryForUser as fetchDictionaryForUserAction,
 } from '../../actions';
+import { dictionaryType, userType, entryType } from '../../types';
 import { Error, Loading } from '../genericViews';
 import './Quiz.css';
 
@@ -106,27 +107,11 @@ function NextStep({ grade, loadNextWord, revealWord }) {
 }
 
 Quiz.propTypes = {
-  dictionary: PropTypes.shape({
-    fetching: PropTypes.bool,
-    data: PropTypes.arrayOf(PropTypes.shape({
-      word: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      definition: PropTypes.string.isRequired,
-    })),
-    error: PropTypes.bool,
-  }).isRequired,
-  user: PropTypes.shape({}).isRequired,
+  dictionary: dictionaryType.isRequired,
+  user: userType.isRequired,
   fetchDictionaryForUser: PropTypes.func.isRequired,
-  wordQueue: PropTypes.arrayOf(PropTypes.shape({
-    word: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    definition: PropTypes.string.isRequired,
-  })).isRequired,
-  currentEntry: PropTypes.shape({
-    word: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    definition: PropTypes.string.isRequired,
-  }),
+  wordQueue: PropTypes.arrayOf(entryType).isRequired,
+  currentEntry: entryType,
   nextWordFrom: PropTypes.func.isRequired,
 };
 
