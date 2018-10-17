@@ -1,6 +1,6 @@
 .QuizBox {
   border: 1px solid #ccc;
-  width: 600px;
+  max-width: 480px;
   margin: 24px auto;
   display: flex;
   flex-direction: column;
@@ -16,4 +16,10 @@
 .QuizBox--incorrect {
   background-color: #EF9A9A;
   border: 2px solid #E57373;
+}
+
+@media screen and (max-width: 520px) {
+  .QuizBox {
+    margin: 10px;
+  }
 }
