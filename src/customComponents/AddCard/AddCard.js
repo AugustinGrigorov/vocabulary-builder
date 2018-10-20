@@ -46,6 +46,7 @@ class AddCard extends React.Component {
             <form onSubmit={this.handleSubmit} className="AddWordForm">
               <input
                 id="word"
+                autoCapitalize="none"
                 className="AddWordForm-Input"
                 name="word"
                 type="text"

@@ -82,6 +82,7 @@ class Quiz extends Component {
               <h2>{currentEntry.word}</h2>
               <input
                 id="submission"
+                autoCapitalize="none"
                 className="QuizBox-Answer"
                 name="submission"
                 placeholder="Answer"
