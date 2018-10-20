@@ -25,7 +25,7 @@
 .UserBadge-Avatar {
   width: 40px;
   height: 40px;
-  border-radius: 20px;
+  border-radius: 50%;
 }
 
 .UserBadge-Name {
@@ -43,7 +43,8 @@
   position: absolute;
   width: 240px;
   background: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid #9E9E9E;
+  border-top: none;
   border-radius: 0 0 10px 10px;
   margin: auto;
   left: 0;

@@ -70,7 +70,7 @@ class Quiz extends Component {
     const { currentEntry, dictionary } = this.props;
     if (dictionary.initialized && !dictionary.data.length) return <Error message="No words in dictionary." />;
     if (!dictionary.initialized) return <Loading />;
-    if (!currentEntry) return <p>Well done</p>;
+    if (!currentEntry) return <h2>Well done</h2>;
     return (
       <div className={`QuizBox QuizBox--${grade}`}>
         {currentEntry

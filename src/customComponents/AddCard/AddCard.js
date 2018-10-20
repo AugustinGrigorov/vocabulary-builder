@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { addWordAction } from '../../actions';
 import Card from '../../genericComponents/Card';
 import './AddCard.css';
@@ -9,6 +10,7 @@ const initialState = {
   word: '',
   type: 'noun',
   definition: '',
+  backgroundColor: 'none',
 };
 
 class AddCard extends React.Component {
@@ -35,49 +37,143 @@ class AddCard extends React.Component {
   }
 
   render() {
-    const { word, definition, type } = this.state;
+    const {
+      word,
+      definition,
+      type,
+      backgroundColor,
+    } = this.state;
+    const colorPickerOptionBaseClass = 'AddWordForm-ColorPickerOption';
     return (
       <Card
         front={
-          <h2 className="Word">+</h2>
+          (
+            <div>
+              <h2 className="Word">+</h2>
+            </div>
+          )
         }
         back={
           (
-            <form onSubmit={this.handleSubmit} className="AddWordForm">
-              <input
-                id="word"
-                autoCapitalize="none"
-                className="AddWordForm-Input"
-                name="word"
-                type="text"
-                placeholder="Type word"
-                value={word}
-                onChange={this.handleChange}
-              />
-              <select
-                id="type"
-                className="AddWordForm-Select"
-                name="type"
-                value={type}
-                onChange={this.handleChange}
-              >
-                <option value="noun">noun</option>
-                <option value="verb">verb</option>
-                <option value="adjective">adjective</option>
-                <option value="adverb">adverb</option>
-                <option value="other">other</option>
-              </select>
-              <input
-                id="definition"
-                className="AddWordForm-Input"
-                name="definition"
-                type="text"
-                placeholder="Enter definition"
-                value={definition}
-                onChange={this.handleChange}
-              />
-              <input className="AddWordForm-Submit" type="submit" value="Submit" />
-            </form>
+            <div>
+              <form onSubmit={this.handleSubmit} className="AddWordForm">
+                <input
+                  id="word"
+                  autoCapitalize="none"
+                  className="AddWordForm-Input"
+                  name="word"
+                  type="text"
+                  placeholder="Type word"
+                  value={word}
+                  onChange={this.handleChange}
+                />
+                <select
+                  id="type"
+                  className="AddWordForm-Select"
+                  name="type"
+                  value={type}
+                  onChange={this.handleChange}
+                >
+                  <option value="noun">noun</option>
+                  <option value="verb">verb</option>
+                  <option value="adjective">adjective</option>
+                  <option value="adverb">adverb</option>
+                  <option value="other">other</option>
+                </select>
+                <input
+                  id="definition"
+                  className="AddWordForm-Input"
+                  name="definition"
+                  type="text"
+                  placeholder="Enter definition"
+                  value={definition}
+                  onChange={this.handleChange}
+                />
+                <input className="AddWordForm-Submit" type="submit" value="Submit" />
+                <ul className="AddWordForm-ColorPicker">
+                  <li>
+                    <label
+                      className={
+                        classNames(
+                          colorPickerOptionBaseClass,
+                          `${colorPickerOptionBaseClass}--None`,
+                          { [`${colorPickerOptionBaseClass}--Active`]: backgroundColor === 'none' },
+                        )
+                       }
+                      htmlFor="backgroundNone"
+                    >
+                      <input
+                        type="radio"
+                        value="none"
+                        name="backgroundColor"
+                        id="backgroundNone"
+                        onChange={this.handleChange}
+                      />
+                    </label>
+                  </li>
+                  <li>
+                    <label
+                      className={
+                        classNames(
+                          colorPickerOptionBaseClass,
+                          `${colorPickerOptionBaseClass}--Red`,
+                          { [`${colorPickerOptionBaseClass}--Active`]: backgroundColor === 'red' },
+                        )
+                       }
+                      htmlFor="backgroundRed"
+                    >
+                      <input
+                        type="radio"
+                        value="red"
+                        name="backgroundColor"
+                        id="backgroundRed"
+                        onChange={this.handleChange}
+                      />
+                    </label>
+                  </li>
+                  <li>
+                    <label
+                      className={
+                        classNames(
+                          colorPickerOptionBaseClass,
+                          `${colorPickerOptionBaseClass}--Blue`,
+                          { [`${colorPickerOptionBaseClass}--Active`]: backgroundColor === 'blue' },
+                        )
+                       }
+                      htmlFor="backgroundBlue"
+                    >
+                      <input
+                        type="radio"
+                        value="blue"
+                        name="backgroundColor"
+                        id="backgroundBlue"
+                        onChange={this.handleChange}
+                      />
+                    </label>
+                  </li>
+                  <li>
+                    <label
+                      className={
+                        classNames(
+                          colorPickerOptionBaseClass,
+                          `${colorPickerOptionBaseClass}--Green`,
+                          { [`${colorPickerOptionBaseClass}--Active`]: backgroundColor === 'green' },
+                        )
+                       }
+                      htmlFor="backgroundGreen"
+                    >
+                      <input
+                        type="radio"
+                        value="green"
+                        name="backgroundColor"
+                        id="backgroundGreen"
+                        onChange={this.handleChange}
+                      />
+                    </label>
+                  </li>
+                </ul>
+              </form>
+            </div>
           )
         }
       />

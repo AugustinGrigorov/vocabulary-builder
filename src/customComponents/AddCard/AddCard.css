@@ -17,7 +17,7 @@
 }
 
 .AddWordForm > * {
-  margin: 12px;
+  margin: 12px 10%;
   display: flex;
   flex-direction: column;
 }
@@ -27,8 +27,9 @@
   padding: 4px;
   text-align: center;
   border: none;
-  border-bottom: 1px solid;
+  border-bottom: 2px solid #455A64;
   border-radius: 0;
+  outline: none;
 }
 
 .AddWordForm-Submit {
@@ -49,4 +50,46 @@
   border: none;
   padding: 4px;
   font-size: 16px;
+  background: #FFF;
+  border: 1px solid #455A64;
+}
+
+.AddWordForm-ColorPicker {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  justify-content: center;
+}
+
+.AddWordForm-ColorPickerOption {
+  border: 2px solid #FFF;
+  display: flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.AddWordForm-ColorPickerOption--None {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAI0lEQVQYV2O0sLD4zwAFJ06cYISxGUmXgGkF0ci64WYSLQEAGPMQ/LG7mdcAAAAASUVORK5CYII=) repeat;
+}
+
+.AddWordForm-ColorPickerOption--Red {
+  background: #D32F2F;
+}
+
+.AddWordForm-ColorPickerOption--Blue {
+  background: #388E3C;
+}
+
+.AddWordForm-ColorPickerOption--Green {
+  background: #1976D2;
+}
+
+.AddWordForm-ColorPickerOption--Active {
+  border: 2px solid #448AFF;
+}
+
+.AddWordForm-ColorPickerOption input {
+  display: none;
 }

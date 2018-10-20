@@ -10,3 +10,25 @@
 .Definition {
   font-size: 16px;
 }
+
+.WordCard-Back {
+  background: #CFD8DC;
+}
+
+.WordCard-Back--Red {
+  color: #FFF;
+  background: #D32F2F;
+  border-color: #B71C1C !important;
+}
+
+.WordCard-Back--Blue {
+  color: #FFF;
+  background: #388E3C;
+  border-color: #1B5E20 !important;
+}
+
+.WordCard-Back--Green {
+  color: #FFF;
+  background: #1976D2;
+  border-color: #0D47A1 !important;
+}
