@@ -41,6 +41,7 @@
 }
 
 .WordCard-ControlButton {
+  cursor: pointer;
   background: transparent;
   padding: 0;
   border: none;
