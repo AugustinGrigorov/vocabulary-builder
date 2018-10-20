@@ -13,6 +13,7 @@
 
 .WordCard-Back {
   background: #CFD8DC;
+  position: relative;
 }
 
 .WordCard-Back--Red {
@@ -31,4 +32,23 @@
   color: #FFF;
   background: #1976D2;
   border-color: #0D47A1 !important;
+}
+
+.WordCard-Buttons {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+.WordCard-ControlButton {
+  background: transparent;
+  padding: 0;
+  border: none;
+  outline: none;
+}
+
+.WordCard-RemoveButton {
+  color: #D50000;
+  margin: 0;
+  font-size: 32px;
 }

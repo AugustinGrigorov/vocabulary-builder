@@ -2,8 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import {
   signIn as signInAction,
   signOut as signOutAction,
@@ -15,8 +13,6 @@ import Gallery from './views/Gallery';
 import Quiz from './views/Quiz';
 import { Error, Loading } from './views/genericViews';
 import './App.css';
-
-library.add(faCaretDown);
 
 const PrivateRoute = ({
   component: View,

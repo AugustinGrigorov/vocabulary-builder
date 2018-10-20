@@ -4,6 +4,7 @@ import firebase, {
 } from '../utils/firebase';
 
 const db = firebase.firestore();
+
 db.settings({
   timestampsInSnapshots: true,
 });
@@ -25,7 +26,8 @@ function dictionaryRequestFailed(error) {
 export function fetchDictionaryForUser({ details }) {
   return (dispatch) => {
     if (details && details.uid) {
-      db.collection('users').doc(details.uid).collection('words').get()
+      db.collection('users').doc(details.uid).collection('words')
+        .get()
         .then((querySnapshot) => {
           dispatch(receiveDictionary(querySnapshot.docs.map(doc => ({
             ...doc.data(),
@@ -39,12 +41,22 @@ export function fetchDictionaryForUser({ details }) {
   };
 }
 
-export function addWordAction({ word, user }) {
+export function addWord({ word, user }) {
   return (dispatch) => {
-    db.collection('users').doc(user.details.uid).collection('words').add(word)
+    db.collection('users').doc(user.details.uid).collection('words')
+      .add(word)
       .then(() => {
         dispatch(fetchDictionaryForUser(user)); // Cancel old request if new one becomes in flight
       })
+      .catch(error => dispatch(dictionaryRequestFailed(error)));
+  };
+}
+
+export function removeWord({ entry, user }) {
+  return (dispatch) => {
+    db.collection('users').doc(user.details.uid).collection('words').doc(entry.id)
+      .delete()
+      .then(() => dispatch(fetchDictionaryForUser(user)))
       .catch(error => dispatch(dictionaryRequestFailed(error)));
   };
 }
@@ -108,15 +120,15 @@ function setCurrentQuizEntry(entry) {
   };
 }
 
-export function nextWordFrom(currentWords) {
+export function nextWordFrom(currentEntries) {
   return (dispatch) => {
-    const wordPosition = Math.floor(currentWords.length * Math.random());
-    const selectedWord = currentWords[wordPosition];
-    const remainingWords = [
-      ...currentWords.slice(0, wordPosition),
-      ...currentWords.slice(wordPosition + 1),
+    const wordPosition = Math.floor(currentEntries.length * Math.random());
+    const selectedEntry = currentEntries[wordPosition];
+    const remainingEntries = [
+      ...currentEntries.slice(0, wordPosition),
+      ...currentEntries.slice(wordPosition + 1),
     ];
-    dispatch(setQuizQueue(remainingWords));
-    dispatch(setCurrentQuizEntry(selectedWord));
+    dispatch(setQuizQueue(remainingEntries));
+    dispatch(setCurrentQuizEntry(selectedEntry));
   };
 }

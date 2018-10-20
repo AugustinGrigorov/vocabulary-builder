@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { addWordAction } from '../../actions';
+import { addWord as addWordAction } from '../../actions';
 import Card from '../../genericComponents/Card';
 import './AddCard.css';
 
@@ -191,7 +191,6 @@ AddCard.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  words: state.words,
   user: state.user,
 });
 
