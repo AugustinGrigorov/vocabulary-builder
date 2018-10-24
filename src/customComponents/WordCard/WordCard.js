@@ -17,6 +17,7 @@ function WordCard({ user, entry, removeWord }) {
     word,
     type,
     definition,
+    example,
     backgroundColor,
   } = entry;
 
@@ -47,6 +48,11 @@ function WordCard({ user, entry, removeWord }) {
             <h2 className="Word">{word}</h2>
             <p className="Type">{type}</p>
             <p className="Definition">{definition}</p>
+            <p className="Example">
+              &quot;
+              {example}
+              &quot;
+            </p>
           </div>
         )
       }

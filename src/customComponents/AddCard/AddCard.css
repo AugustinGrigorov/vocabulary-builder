@@ -17,7 +17,7 @@
 }
 
 .AddWordForm > * {
-  margin: 12px 10%;
+  margin: 8px 10%;
   display: flex;
   flex-direction: column;
 }

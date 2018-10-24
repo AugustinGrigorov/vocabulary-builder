@@ -40,6 +40,7 @@ class AddCard extends React.Component {
     const {
       word,
       definition,
+      example,
       type,
       backgroundColor,
     } = this.state;
@@ -87,6 +88,15 @@ class AddCard extends React.Component {
                   type="text"
                   placeholder="Enter definition"
                   value={definition}
+                  onChange={this.handleChange}
+                />
+                <input
+                  id="example"
+                  className="AddWordForm-Input"
+                  name="example"
+                  type="text"
+                  placeholder="Enter an example"
+                  value={example}
                   onChange={this.handleChange}
                 />
                 <input className="AddWordForm-Submit" type="submit" value="Submit" />

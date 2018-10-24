@@ -36,8 +36,8 @@
 
 .WordCard-Buttons {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 8px;
+  right: 8px;
 }
 
 .WordCard-ControlButton {
@@ -49,7 +49,11 @@
 }
 
 .WordCard-RemoveButton {
-  color: #D50000;
+  color: #212121;
   margin: 0;
-  font-size: 32px;
+  font-size: 24px;
+}
+
+.Example {
+  font-style: italic;
 }
