@@ -41,10 +41,10 @@ export function fetchDictionaryForUser({ details }) {
   };
 }
 
-export function addWord({ word, user }) {
+export function addEntry({ entry, user }) {
   return (dispatch) => {
     db.collection('users').doc(user.details.uid).collection('words')
-      .add(word)
+      .add(entry)
       .then(() => {
         dispatch(fetchDictionaryForUser(user)); // Cancel old request if new one becomes in flight
       })

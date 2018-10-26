@@ -2,16 +2,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { addWord as addWordAction } from '../../actions';
+import { addEntry as addEntryAction } from '../../actions';
 import Card from '../../genericComponents/Card';
 import './AddCard.css';
 
 const initialState = {
-  word: '',
-  type: 'noun',
-  definition: '',
-  backgroundColor: 'none',
+  entry: {
+    word: '',
+    definition: '',
+    example: '',
+    type: 'noun',
+    backgroundColor: 'none',
+  },
+  invalidInputFields: [],
 };
+
+function validateEntry(entry) {
+  return Object.keys(entry).filter(field => !entry[field].length);
+}
 
 class AddCard extends React.Component {
   constructor(props) {
@@ -23,27 +31,41 @@ class AddCard extends React.Component {
   }
 
   handleSubmit(e) {
-    const { addWord, user } = this.props;
+    const { addEntry, user } = this.props;
+    const { entry } = this.state;
     e.preventDefault();
-    addWord({ word: this.state, user });
-    this.setState(initialState);
+    const invalidInputFields = validateEntry(entry);
+    if (!invalidInputFields.length) {
+      addEntry({ entry, user });
+      this.setState(initialState);
+    } else {
+      this.setState({ invalidInputFields });
+    }
   }
 
   handleChange(event) {
     const { name, value } = event.target;
+    const { entry } = this.state;
     this.setState({
-      [name]: value,
+      entry: {
+        ...entry,
+        [name]: value,
+      },
     });
   }
 
   render() {
+    const {
+      entry,
+      invalidInputFields,
+    } = this.state;
     const {
       word,
       definition,
       example,
       type,
       backgroundColor,
-    } = this.state;
+    } = entry;
     const colorPickerOptionBaseClass = 'AddWordForm-ColorPickerOption';
     return (
       <Card
@@ -61,7 +83,10 @@ class AddCard extends React.Component {
                 <input
                   id="word"
                   autoCapitalize="none"
-                  className="AddWordForm-Input"
+                  className={classNames(
+                    'AddWordForm-Input',
+                    { 'AddWordForm-Input--WithError': invalidInputFields.includes('word') },
+                  )}
                   name="word"
                   type="text"
                   placeholder="Type word"
@@ -83,7 +108,10 @@ class AddCard extends React.Component {
                 </select>
                 <input
                   id="definition"
-                  className="AddWordForm-Input"
+                  className={classNames(
+                    'AddWordForm-Input',
+                    { 'AddWordForm-Input--WithError': invalidInputFields.includes('definition') },
+                  )}
                   name="definition"
                   type="text"
                   placeholder="Enter definition"
@@ -92,7 +120,10 @@ class AddCard extends React.Component {
                 />
                 <input
                   id="example"
-                  className="AddWordForm-Input"
+                  className={classNames(
+                    'AddWordForm-Input',
+                    { 'AddWordForm-Input--WithError': invalidInputFields.includes('example') },
+                  )}
                   name="example"
                   type="text"
                   placeholder="Enter an example"
@@ -193,7 +224,7 @@ class AddCard extends React.Component {
 
 AddCard.propTypes = {
   user: PropTypes.shape({}),
-  addWord: PropTypes.func.isRequired,
+  addEntry: PropTypes.func.isRequired,
 };
 
 AddCard.defaultProps = {
@@ -205,7 +236,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addWord: payload => dispatch(addWordAction(payload)),
+  addEntry: payload => dispatch(addEntryAction(payload)),
 });
 
 export default connect(

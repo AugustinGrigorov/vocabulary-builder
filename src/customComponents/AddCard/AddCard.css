@@ -32,6 +32,10 @@
   outline: none;
 }
 
+.AddWordForm-Input--WithError {
+  border-color: #E57373;
+}
+
 .AddWordForm-Submit {
   cursor: pointer;
   appearance: none;
