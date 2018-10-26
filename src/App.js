@@ -35,7 +35,8 @@ const PrivateRoute = ({
 );
 
 class App extends Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
     const { listenForAuthChanges } = this.props;
     listenForAuthChanges();
   }

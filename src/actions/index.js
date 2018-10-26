@@ -132,3 +132,17 @@ export function nextWordFrom(currentEntries) {
     dispatch(setCurrentQuizEntry(selectedEntry));
   };
 }
+
+export function startQuiz() {
+  return {
+    type: 'START_QUIZ',
+  };
+}
+
+export function updateScore({ attempted, correct }) {
+  return {
+    type: 'UPDATE_SCORE',
+    attempted,
+    correct,
+  };
+}

@@ -8,7 +8,8 @@ import WordCard from '../../customComponents/WordCard';
 import './Gallery.css';
 
 class Gallery extends Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
     const { dictionary, user, fetchDictionaryForUser } = this.props;
     if (!dictionary.initialized) fetchDictionaryForUser(user);
   }
