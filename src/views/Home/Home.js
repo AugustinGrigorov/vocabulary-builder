@@ -1,17 +1,42 @@
 import React from 'react';
-import './Home.css';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 80px);
+  margin: 0;
+  text-align: center;
+  background: #43A047;
+  color: #fff;
+  padding: 8px;
+  box-sizing: border-box;
+`;
+
+const Heading = styled.h2`
+  max-width: 800px;
+  font-size: 32px;
+`;
+
+const Description = styled.p`
+  max-width: 800px;
+  font-size: 18px;
+`;
 
 function Home() {
   return (
-    <div className="HomePage">
-      <h2 className="HomePage-Heading">Vocabulary builder</h2>
-      <p className="HomePage-Description">
+    <Container>
+      <Heading>Vocabulary builder</Heading>
+      <Description>
         This is a web aplication designed
         to help you store and practice new
         words you learn when studying a
         foreign language.
-      </p>
-    </div>
+      </Description>
+    </Container>
   );
 }
 

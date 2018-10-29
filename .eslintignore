@@ -1,0 +1,9 @@
+# dependencies
+/node_modules
+
+
+# production
+/build
+
+config-overrides.js
+src/registerServiceWorker.js

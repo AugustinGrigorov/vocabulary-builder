@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { fetchDictionaryForUser as fetchDictionaryForUserAction } from '../../actions';
 import { dictionaryType, userType } from '../../types';
 import AddCard from '../../customComponents/AddCard';
 import WordCard from '../../customComponents/WordCard';
-import './Gallery.css';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  @media (max-width: 520px) {
+    justify-content: center;
+  }
+`;
 
 class Gallery extends Component {
   constructor(props) {
@@ -18,12 +28,12 @@ class Gallery extends Component {
     const { dictionary } = this.props;
 
     return (
-      <div className="Gallery">
+      <Container>
         <AddCard />
         {dictionary.data.map(entry => (
           <WordCard key={entry.id} entry={entry} />
         ))}
-      </div>
+      </Container>
     );
   }
 }

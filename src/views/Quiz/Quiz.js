@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import styled, { css } from 'styled-components';
 import {
   nextWordFrom as nextWordFromAction,
   fetchDictionaryForUser as fetchDictionaryForUserAction,
@@ -9,13 +10,100 @@ import {
 } from '../../actions';
 import { dictionaryType, userType, entryType } from '../../types';
 import { Error, Loading } from '../genericViews';
-import './Quiz.css';
 
 const initialState = {
   submission: '',
   hasUsedHint: false,
   grade: null,
 };
+
+const buttonBaseStyle = css`
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 16px;
+  border: none;
+  text-align: center;
+  border-radius: 18px;
+  text-transform: uppercase;
+  margin: 12px auto;
+  color: #FFF;
+`;
+
+const NextButton = styled.button`
+  ${buttonBaseStyle}
+  background: #0091EA;
+`;
+
+const RevealButton = styled.button`
+  ${buttonBaseStyle}
+  background: #EF6C00;
+`;
+
+const SubmitButton = styled.input`
+  ${buttonBaseStyle}
+  appearance: none;
+  background: #388E3C;
+`;
+
+const QuizBox = styled.div`
+  max-width: 480px;
+  margin: 24px auto;
+  padding: 10px;
+  border-radius: 4px;
+  border: 2px solid;
+  background-color: ${(props) => {
+    switch (props.grade) {
+      case 'correct':
+        return '#00E676';
+      case 'incorrect':
+        return '#EF9A9A';
+      default:
+        return null;
+    }
+  }};
+  border-color: ${(props) => {
+    switch (props.grade) {
+      case 'correct':
+        return '#00C853';
+      case 'incorrect':
+        return '#E57373';
+      default:
+        return '#9E9E9E';
+    }
+  }};
+
+  @media (max-width: 520px) {
+    margin: 10px;
+  }
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  margin: auto;
+`;
+
+const Answer = styled.input`
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid;
+  padding: 4px;
+  text-align: center;
+  border-radius: 0;
+  outline: none;
+  border-color: ${(props) => {
+    switch (props.grade) {
+      case 'correct':
+        return '#00C853';
+      case 'incorrect':
+        return '#E57373';
+      default:
+        return '#455A64';
+    }
+  }}
+`;
 
 class Quiz extends Component {
   constructor(props) {
@@ -105,34 +193,33 @@ class Quiz extends Component {
       );
     }
     return (
-      <div className={`QuizBox QuizBox--${grade}`}>
+      <QuizBox grade={grade}>
         {currentEntry
           ? (
-            <form
-              className="QuizBox-Form"
+            <Form
               onSubmit={this.handleSubmit}
             >
               <h2>{currentEntry.word}</h2>
-              <input
+              <Answer
                 id="submission"
+                grade={grade}
                 autoCapitalize="none"
-                className="QuizBox-Answer"
                 name="submission"
                 placeholder="Answer"
                 type="text"
                 onChange={this.handleChange}
                 value={submission}
               />
-              <input className="QuizBox-Submit" type="submit" value="Submit" />
+              <SubmitButton type="submit" value="Submit" />
               <NextStep
                 grade={grade}
                 loadNextWord={this.loadNextWord}
                 revealWord={this.revealWord}
               />
-            </form>
+            </Form>
           ) : null
         }
-      </div>
+      </QuizBox>
     );
   }
 }
@@ -140,9 +227,9 @@ class Quiz extends Component {
 function NextStep({ grade, loadNextWord, revealWord }) {
   switch (grade) {
     case 'correct':
-      return <button className="QuizBox-Next" type="button" onClick={loadNextWord}>Next word</button>;
+      return <NextButton type="button" onClick={loadNextWord}>Next word</NextButton>;
     case 'incorrect':
-      return <button className="QuizBox-Reveal" type="button" onClick={revealWord}>Reveal</button>;
+      return <RevealButton type="button" onClick={revealWord}>Reveal</RevealButton>;
     default:
       return null;
   }

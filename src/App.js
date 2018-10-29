@@ -12,7 +12,6 @@ import Home from './views/Home';
 import Gallery from './views/Gallery';
 import Quiz from './views/Quiz';
 import { Error, Loading } from './views/genericViews';
-import './App.css';
 
 const PrivateRoute = ({
   component: View,

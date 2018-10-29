@@ -1,113 +1,78 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import styled from 'styled-components';
 import {
   signIn as signInAction,
   signOut as signOutAction,
 } from '../../actions';
-import './NavigationBar.css';
+import InteractiveButton from './InteractiveButton';
+import ProfileControls from './ProfileControls';
+
+const Container = styled.nav`
+  position: relative;
+  background-color: #388E3C;
+  width: 100%;
+  display: flex;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  height: 64px;
+`;
+
+const NavLink = styled(Link)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+`;
+
+const RightSection = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  margin-left: auto;
+  margin-right: 12px;
+`;
+
+const SignInButton = styled(InteractiveButton)`
+  color: #FFF;
+`;
 
 function NavigationBar({ user, signIn, signOut }) {
   return (
-    <nav className="TopNavigation">
-      <Link
-        className="TopNavigation-Link"
-        to="/"
-      >
+    <Container>
+      <NavLink to="/">
         Home
-      </Link>
+      </NavLink>
       {
         user.details ? (
           <Fragment>
-            <Link
-              className="TopNavigation-Link"
-              to="/gallery"
-            >
+            <NavLink to="/gallery">
               Gallery
-            </Link>
-            <Link
-              className="TopNavigation-Link"
-              to="/quiz"
-            >
+            </NavLink>
+            <NavLink to="/quiz">
               Quiz
-            </Link>
+            </NavLink>
           </Fragment>
         ) : null
       }
-      {
-        user.details
-          ? <ProfileControls userDetails={user.details} signOut={signOut} />
-          : <InteractiveButton text="Sign in" action={signIn} className="TopNavigation-SignInButton" />
-      }
-    </nav>
-  );
-}
-
-class ProfileControls extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showMenu: false,
-    };
-  }
-
-  render() {
-    const { showMenu } = this.state;
-    const { userDetails, signOut } = this.props;
-    return (
-      <div
-        className="ProfileControls"
-        onMouseEnter={() => this.setState({ showMenu: true })}
-        onMouseLeave={() => this.setState({ showMenu: false })}
-      >
-        <UserBadge userDetails={userDetails} />
-        { showMenu
-          ? (
-            <div className="ProfileControls-Menu">
-              <ul>
-                <li className="ProfileControls-MenuItem">
-                  <InteractiveButton
-                    text="Sign out"
-                    action={signOut}
-                    className="ProfileControls-MenuButton"
-                  />
-                </li>
-              </ul>
-            </div>
-          ) : null
+      <RightSection>
+        {
+          user.details
+            ? <ProfileControls userDetails={user.details} signOut={signOut} />
+            : <SignInButton type="button" onClick={signIn}>Sign in</SignInButton>
         }
-      </div>
-    );
-  }
-}
-
-function UserBadge({ userDetails }) {
-  return (
-    <div className="UserBadge">
-      <img
-        className="UserBadge-Avatar"
-        alt={userDetails.displayName}
-        src={userDetails.photoURL}
-      />
-      <span className="UserBadge-Name">
-        {userDetails.displayName}
-      </span>
-      <FontAwesomeIcon className="UserBadge-Arrow" icon="caret-down" />
-    </div>
-  );
-}
-
-function InteractiveButton({ text, action, className }) {
-  return (
-    <button
-      className={className}
-      type="button"
-      onClick={action}
-    >
-      {text}
-    </button>
+      </RightSection>
+    </Container>
   );
 }
 
@@ -119,25 +84,6 @@ NavigationBar.propTypes = {
 
 NavigationBar.defaultProps = {
   user: null,
-};
-
-ProfileControls.propTypes = {
-  userDetails: PropTypes.shape({}).isRequired,
-  signOut: PropTypes.func.isRequired,
-};
-
-UserBadge.propTypes = {
-  userDetails: PropTypes.shape({}).isRequired,
-};
-
-InteractiveButton.propTypes = {
-  text: PropTypes.string.isRequired,
-  action: PropTypes.func.isRequired,
-  className: PropTypes.string,
-};
-
-InteractiveButton.defaultProps = {
-  className: null,
 };
 
 const mapDispatchToProps = dispatch => ({

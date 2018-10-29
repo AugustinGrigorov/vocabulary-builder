@@ -1,16 +1,70 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { removeWord as removeWordAction } from '../../actions';
 import { userType } from '../../types';
 import Card from '../../genericComponents/Card';
-import './WordCard.css';
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
+const themes = {
+  red: {
+    color: '#FFF',
+    backgroundColor: '#D32F2F',
+    borderColor: '#B71C1C',
+  },
+  blue: {
+    color: '#FFF',
+    backgroundColor: '#388E3C',
+    borderColor: '#1B5E20',
+  },
+  green: {
+    color: '#FFF',
+    backgroundColor: '#1976D2',
+    borderColor: '#0D47A1',
+  },
+  none: {
+    backgroundColor: '#CFD8DC',
+    borderColor: '#9E9E9E',
+  },
+};
+
+const ButtonsContainer = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+`;
+
+const ControlButtonWrapper = styled.div`
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+  border: none;
+  outline: none;
+`;
+
+const RemoveButton = styled(FontAwesomeIcon)`
+  color: #212121;
+  margin: 0;
+  font-size: 24px;
+`;
+
+const Word = styled.h2`
+  letter-spacing: 1px;
+`;
+
+const Type = styled.p`
+  font-style: italic;
+  font-size: 16px;
+`;
+
+const Definition = styled.p`
+  font-size: 16px;
+`;
+
+const Example = styled.p`
+  font-style: italic;
+`;
 
 function WordCard({ user, entry, removeWord }) {
   const {
@@ -18,42 +72,34 @@ function WordCard({ user, entry, removeWord }) {
     type,
     definition,
     example,
-    backgroundColor,
+    theme,
   } = entry;
 
   return (
     <Card
+      theme={themes[theme]}
       front={
         (
-          <div className="WordCard-Front">
-            <h2 className="Word">{word}</h2>
-          </div>
+          <h2 className="Word">{word}</h2>
         )
       }
       back={
         (
-          <div
-            className={
-              classNames(
-                'WordCard-Back',
-                { [`WordCard-Back--${capitalizeFirstLetter(backgroundColor)}`]: backgroundColor !== 'none' },
-              )
-            }
-          >
-            <div className="WordCard-Buttons">
-              <button className="WordCard-ControlButton" type="button" onClick={() => removeWord({ entry, user })}>
-                <FontAwesomeIcon className="WordCard-RemoveButton" icon="minus-square" />
-              </button>
-            </div>
-            <h2 className="Word">{word}</h2>
-            <p className="Type">{type}</p>
-            <p className="Definition">{definition}</p>
-            <p className="Example">
+          <Fragment>
+            <ButtonsContainer>
+              <ControlButtonWrapper type="button" onClick={() => removeWord({ entry, user })}>
+                <RemoveButton icon="minus-square" />
+              </ControlButtonWrapper>
+            </ButtonsContainer>
+            <Word>{word}</Word>
+            <Type>{type}</Type>
+            <Definition>{definition}</Definition>
+            <Example>
               &quot;
               {example}
               &quot;
-            </p>
-          </div>
+            </Example>
+          </Fragment>
         )
       }
     />
@@ -66,7 +112,7 @@ WordCard.propTypes = {
     word: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     definition: PropTypes.string.isRequired,
-    backgroundColor: PropTypes.string.isRequired,
+    theme: PropTypes.string.isRequired,
   }).isRequired,
   removeWord: PropTypes.func.isRequired,
 };
