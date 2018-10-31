@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
+import { Transition } from 'react-transition-group';
 
 const cardBaseStyle = css`
   width: 240px;
@@ -9,14 +10,16 @@ const cardBaseStyle = css`
 
 const Container = styled.div`
   ${cardBaseStyle}
+  cursor: pointer;
   display: inline-flex;
   margin: 10px;
   vertical-align: top;
   perspective: 1000px;
+  outline: none;
 `;
 
 const Body = styled.div`
-  transition: 0.6s;
+  transition: .5s;
   transform-style: preserve-3d;
   position: relative;
   transform: ${props => (props.focused ? 'rotateY(180deg)' : 'none')};
@@ -36,6 +39,7 @@ const CardContent = styled.div`
 
 const Front = styled(CardContent)`
   z-index: 2;
+  transform: rotateY(0deg);
 `;
 
 const Back = styled(CardContent)`
@@ -48,16 +52,24 @@ const Back = styled(CardContent)`
 class Card extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       flipped: false,
     };
 
+    this.elementReferece = React.createRef();
     this.flipCard = this.flipCard.bind(this);
   }
 
-  flipCard() {
-    this.setState(prevState => ({
-      flipped: !prevState.flipped,
+  flipCard(e, isFocused) {
+    const currentElement = this.elementReferece.current;
+    const relatedElement = e.relatedTarget;
+
+    // On blur do not flip if new focus is inside the card
+    if (!isFocused && relatedElement && currentElement.contains(relatedElement)) return;
+
+    this.setState(() => ({
+      flipped: isFocused,
     }));
   }
 
@@ -71,25 +83,48 @@ class Card extends Component {
 
     return (
       <Container
-        onMouseEnter={this.flipCard}
-        onMouseLeave={this.flipCard}
+        tabIndex={0}
+        onFocus={e => this.flipCard(e, true)}
+        onBlur={e => this.flipCard(e, false)}
+        role="button"
+        ref={this.elementReferece}
       >
-        <Body
-          focused={flipped}
-        >
-          {
-            !flipped
-              ? (
-                <Front>
-                  {front}
-                </Front>
-              )
-              : (
-                <Back {...theme}>
-                  {back}
-                </Back>
-              )
-          }
+        <Body focused={flipped}>
+          <Transition
+            in={flipped}
+            timeout={150}
+          >
+            {(state) => {
+              switch (state) {
+                case 'entering':
+                  return (
+                    <Front>
+                      {front}
+                    </Front>
+                  );
+                case 'entered':
+                  return (
+                    <Back {...theme}>
+                      {back}
+                    </Back>
+                  );
+                case 'exiting':
+                  return (
+                    <Back {...theme}>
+                      {back}
+                    </Back>
+                  );
+                case 'exited':
+                  return (
+                    <Front>
+                      {front}
+                    </Front>
+                  );
+                default:
+                  return null;
+              }
+            }}
+          </Transition>
         </Body>
       </Container>
     );
