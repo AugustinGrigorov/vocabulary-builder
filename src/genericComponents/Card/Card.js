@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { Transition } from 'react-transition-group';
 
 const cardBaseStyle = css`
   width: 240px;
@@ -9,7 +8,6 @@ const cardBaseStyle = css`
 `;
 
 const Container = styled.div`
-  ${cardBaseStyle}
   cursor: pointer;
   display: inline-flex;
   margin: 10px;
@@ -19,6 +17,7 @@ const Container = styled.div`
 `;
 
 const Body = styled.div`
+  ${cardBaseStyle}
   transition: .5s;
   transform-style: preserve-3d;
   position: relative;
@@ -27,6 +26,9 @@ const Body = styled.div`
 
 const CardContent = styled.div`
   ${cardBaseStyle}
+  position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,42 +91,15 @@ class Card extends Component {
         role="button"
         ref={this.elementReferece}
       >
-        <Body focused={flipped}>
-          <Transition
-            in={flipped}
-            timeout={150}
-          >
-            {(state) => {
-              switch (state) {
-                case 'entering':
-                  return (
-                    <Front>
-                      {front}
-                    </Front>
-                  );
-                case 'entered':
-                  return (
-                    <Back {...theme}>
-                      {back}
-                    </Back>
-                  );
-                case 'exiting':
-                  return (
-                    <Back {...theme}>
-                      {back}
-                    </Back>
-                  );
-                case 'exited':
-                  return (
-                    <Front>
-                      {front}
-                    </Front>
-                  );
-                default:
-                  return null;
-              }
-            }}
-          </Transition>
+        <Body
+          focused={flipped}
+        >
+          <Front>
+            {front}
+          </Front>
+          <Back {...theme}>
+            {back}
+          </Back>
         </Body>
       </Container>
     );
