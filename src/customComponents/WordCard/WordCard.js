@@ -66,7 +66,12 @@ const Example = styled.p`
   font-style: italic;
 `;
 
-function WordCard({ user, entry, removeWord }) {
+function WordCard({
+  user,
+  entry,
+  removeWord,
+  ...props
+}) {
   const {
     word,
     type,
@@ -77,6 +82,7 @@ function WordCard({ user, entry, removeWord }) {
 
   return (
     <Card
+      {...props}
       theme={themes[theme]}
       front={
         (

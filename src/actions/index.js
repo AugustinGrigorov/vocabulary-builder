@@ -1,3 +1,4 @@
+import nanoid from 'nanoid';
 import firebase, {
   auth,
   provider,
@@ -16,48 +17,59 @@ function receiveDictionary(dictionary) {
   };
 }
 
-function dictionaryRequestFailed(error) {
+function queueEntryForAddition(entry) {
   return {
-    type: 'DICTIONARY_REQUEST_FAILED',
-    error,
+    type: 'QUEUE_ENTRY_FOR_ADDITION',
+    entry,
+  };
+}
+
+function queueEntryForDeletion(entry) {
+  return {
+    type: 'QUEUE_ENTRY_FOR_DELETION',
+    entry,
+  };
+}
+
+function dequeueCompleted(dictionary) {
+  return {
+    type: 'DEQUEUE_COMPLETED',
+    dictionary,
   };
 }
 
 export function fetchDictionaryForUser({ details }) {
   return (dispatch) => {
     if (details && details.uid) {
-      db.collection('users').doc(details.uid).collection('words')
-        .get()
-        .then((querySnapshot) => {
-          dispatch(receiveDictionary(querySnapshot.docs.map(doc => ({
-            ...doc.data(),
-            id: doc.id,
-          }))));
-        })
-        .catch(error => dispatch(dictionaryRequestFailed(error)));
-    } else {
-      dispatch(receiveDictionary([]));
+      db.collection('users').doc(details.uid).get()
+        .then((doc) => {
+          const dictionary = doc.data().words;
+          dispatch(receiveDictionary(dictionary));
+          dispatch(dequeueCompleted(dictionary));
+        });
     }
   };
 }
 
-export function addEntry({ entry, user }) {
+export function addEntry({ entryData, user }) {
   return (dispatch) => {
-    db.collection('users').doc(user.details.uid).collection('words')
-      .add(entry)
-      .then(() => {
-        dispatch(fetchDictionaryForUser(user)); // Cancel old request if new one becomes in flight
-      })
-      .catch(error => dispatch(dictionaryRequestFailed(error)));
+    const entry = {
+      id: nanoid(),
+      ...entryData,
+    };
+    dispatch(queueEntryForAddition(entry));
+    db.collection('users').doc(user.details.uid).update({
+      words: firebase.firestore.FieldValue.arrayUnion(entry),
+    }).then(() => dispatch(fetchDictionaryForUser(user)));
   };
 }
 
 export function removeWord({ entry, user }) {
   return (dispatch) => {
-    db.collection('users').doc(user.details.uid).collection('words').doc(entry.id)
-      .delete()
-      .then(() => dispatch(fetchDictionaryForUser(user)))
-      .catch(error => dispatch(dictionaryRequestFailed(error)));
+    dispatch(queueEntryForDeletion(entry));
+    db.collection('users').doc(user.details.uid).update({
+      words: firebase.firestore.FieldValue.arrayRemove(entry),
+    }).then(() => dispatch(fetchDictionaryForUser(user)));
   };
 }
 

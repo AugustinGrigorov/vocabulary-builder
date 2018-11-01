@@ -90,7 +90,7 @@ const Submit = styled.input`
 `;
 
 const initialState = {
-  entry: {
+  entryData: {
     word: '',
     definition: '',
     example: '',
@@ -107,8 +107,8 @@ const colorOptions = [
   'green',
 ];
 
-function validateEntry(entry) {
-  return Object.keys(entry).filter(field => !entry[field].length);
+function validateEntryData(entryData) {
+  return Object.keys(entryData).filter(field => !entryData[field].length);
 }
 
 class AddCard extends React.Component {
@@ -122,11 +122,11 @@ class AddCard extends React.Component {
 
   handleSubmit(e) {
     const { addEntry, user } = this.props;
-    const { entry } = this.state;
+    const { entryData } = this.state;
     e.preventDefault();
-    const invalidInputFields = validateEntry(entry);
+    const invalidInputFields = validateEntryData(entryData);
     if (!invalidInputFields.length) {
-      addEntry({ entry, user });
+      addEntry({ entryData, user });
       this.setState(initialState);
     } else {
       this.setState({ invalidInputFields });
@@ -135,10 +135,10 @@ class AddCard extends React.Component {
 
   handleChange(event) {
     const { name, value } = event.target;
-    const { entry } = this.state;
+    const { entryData } = this.state;
     this.setState({
-      entry: {
-        ...entry,
+      entryData: {
+        ...entryData,
         [name]: value,
       },
     });
@@ -146,7 +146,7 @@ class AddCard extends React.Component {
 
   render() {
     const {
-      entry,
+      entryData,
       invalidInputFields,
     } = this.state;
 
@@ -156,7 +156,7 @@ class AddCard extends React.Component {
       example,
       type,
       theme,
-    } = entry;
+    } = entryData;
 
     return (
       <Card

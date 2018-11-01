@@ -8,6 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.3",
     "firebase": "^5.5.1",
     "firebaseui": "^3.4.1",
+    "nanoid": "^1.3.3",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",

@@ -14,6 +14,7 @@ const Container = styled.div`
   vertical-align: top;
   perspective: 1000px;
   outline: none;
+  opacity: ${props => (props.queued ? '0.6' : null)}
 `;
 
 const Body = styled.div`
@@ -80,6 +81,7 @@ class Card extends Component {
       front,
       back,
       theme,
+      queued,
     } = this.props;
     const { flipped } = this.state;
 
@@ -90,6 +92,7 @@ class Card extends Component {
         onBlur={e => this.flipCard(e, false)}
         role="button"
         ref={this.elementReferece}
+        queued={queued}
       >
         <Body
           focused={flipped}
@@ -114,12 +117,14 @@ Card.propTypes = {
     borderColor: PropTypes.string,
     color: PropTypes.string,
   }),
+  queued: PropTypes.bool,
 };
 
 Card.defaultProps = {
   theme: {
     borderColor: '#9E9E9E',
   },
+  queued: false,
 };
 
 export default Card;

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { fetchDictionaryForUser as fetchDictionaryForUserAction } from '../../actions';
-import { dictionaryType, userType } from '../../types';
+import { dictionaryType, entryType, userType } from '../../types';
 import AddCard from '../../customComponents/AddCard';
 import WordCard from '../../customComponents/WordCard';
 
@@ -25,13 +25,20 @@ class Gallery extends Component {
   }
 
   render() {
-    const { dictionary } = this.props;
+    const { dictionary, entryAdditionQueue, entryDeletionQueueIds } = this.props;
 
     return (
       <Container>
         <AddCard />
         {dictionary.data.map(entry => (
-          <WordCard key={entry.id} entry={entry} />
+          <WordCard
+            key={entry.id}
+            entry={entry}
+            queued={entryDeletionQueueIds.includes(entry.id)}
+          />
+        ))}
+        {entryAdditionQueue.map(entry => (
+          <WordCard key={entry.id} entry={entry} queued />
         ))}
       </Container>
     );
@@ -40,12 +47,16 @@ class Gallery extends Component {
 
 Gallery.propTypes = {
   dictionary: dictionaryType.isRequired,
+  entryAdditionQueue: PropTypes.arrayOf(entryType).isRequired,
+  entryDeletionQueueIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   fetchDictionaryForUser: PropTypes.func.isRequired,
   user: userType.isRequired,
 };
 
 const mapStateToProps = state => ({
   dictionary: state.dictionary,
+  entryAdditionQueue: state.gallery.entryAdditionQueue,
+  entryDeletionQueueIds: state.gallery.entryDeletionQueueIds,
   user: state.user,
 });
 
