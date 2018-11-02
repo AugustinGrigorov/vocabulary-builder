@@ -7,7 +7,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 64px);
   margin: 0;
   text-align: center;
   background: #43A047;

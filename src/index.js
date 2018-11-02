@@ -4,14 +4,20 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCaretDown, faMinusSquare } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCaretDown,
+  faMinusSquare,
+  faTrophy,
+  faSpinner,
+  faExclamationTriangle,
+} from '@fortawesome/free-solid-svg-icons';
 
 import rootReducer from './reducers';
 import registerServiceWorker from './registerServiceWorker';
 import App from './App';
 import './index.css';
 
-library.add(faCaretDown, faMinusSquare);
+library.add(faCaretDown, faMinusSquare, faTrophy, faSpinner, faExclamationTriangle);
 
 const reduxDevtoolsExtensionHook = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';
 const composeEnhancers = window[reduxDevtoolsExtensionHook] || compose;

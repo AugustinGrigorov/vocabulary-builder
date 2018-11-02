@@ -10,6 +10,7 @@ import {
 } from '../../actions';
 import { dictionaryType, userType, entryType } from '../../types';
 import { Error, Loading } from '../genericViews';
+import Result from './Result';
 
 const initialState = {
   submission: '',
@@ -179,19 +180,9 @@ class Quiz extends Component {
       attempted,
       correct,
     } = this.props;
-    if (dictionary.initialized && !dictionary.data.length) return <Error message="No words in dictionary." />;
     if (!dictionary.initialized) return <Loading />;
-    if (!currentEntry) {
-      // TODO: Extract this into its own component
-      return (
-        <div>
-          <h2>Well done</h2>
-          <p>
-            {`You got ${correct} out of ${attempted} right.`}
-          </p>
-        </div>
-      );
-    }
+    if (dictionary.initialized && !dictionary.data.length) return <Error message="No words in dictionary." />;
+    if (!currentEntry) return <Result attempted={attempted} correct={correct} />;
     return (
       <QuizBox grade={grade}>
         {currentEntry
