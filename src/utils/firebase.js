@@ -1,4 +1,5 @@
-import firebase from 'firebase';
+import { initializeApp, auth } from 'firebase/app';
+import 'firebase/auth';
 
 const config = {
   apiKey: 'AIzaSyD5KltBeB5gNXcPsigqVHWeJj4yewpiVWY',
@@ -9,8 +10,16 @@ const config = {
   messagingSenderId: '645256156137',
 };
 
-firebase.initializeApp(config);
+initializeApp(config);
 
-export const provider = new firebase.auth.GoogleAuthProvider();
-export const auth = firebase.auth();
-export default firebase;
+const provider = new auth.GoogleAuthProvider();
+
+const initiateSignIn = () => auth().signInWithPopup(provider);
+const initiateSignOut = () => auth().signOut();
+const authChangeListener = cb => auth().onAuthStateChanged(cb);
+
+export {
+  initiateSignIn,
+  initiateSignOut,
+  authChangeListener,
+};

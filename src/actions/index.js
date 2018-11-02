@@ -1,10 +1,14 @@
 import nanoid from 'nanoid';
-import firebase, {
-  auth,
-  provider,
+import { firestore } from 'firebase/app';
+import 'firebase/firestore';
+
+import {
+  initiateSignIn,
+  initiateSignOut,
+  authChangeListener,
 } from '../utils/firebase';
 
-const db = firebase.firestore();
+const db = firestore();
 
 db.settings({
   timestampsInSnapshots: true,
@@ -59,7 +63,7 @@ export function addEntry({ entryData, user }) {
     };
     dispatch(queueEntryForAddition(entry));
     db.collection('users').doc(user.details.uid).update({
-      words: firebase.firestore.FieldValue.arrayUnion(entry),
+      words: firestore.FieldValue.arrayUnion(entry),
     }).then(() => dispatch(fetchDictionaryForUser(user)));
   };
 }
@@ -68,7 +72,7 @@ export function removeWord({ entry, user }) {
   return (dispatch) => {
     dispatch(queueEntryForDeletion(entry));
     db.collection('users').doc(user.details.uid).update({
-      words: firebase.firestore.FieldValue.arrayRemove(entry),
+      words: firestore.FieldValue.arrayRemove(entry),
     }).then(() => dispatch(fetchDictionaryForUser(user)));
   };
 }
@@ -95,7 +99,7 @@ function userDetailsRequestFailed() {
 export function signIn() {
   return (dispatch) => {
     dispatch(requestUserDetails());
-    auth.signInWithPopup(provider).catch(() => {
+    initiateSignIn().catch(() => {
       dispatch(userDetailsRequestFailed());
     });
   };
@@ -104,7 +108,7 @@ export function signIn() {
 export function signOut() {
   return (dispatch) => {
     dispatch(requestUserDetails());
-    auth.signOut().catch(() => {
+    initiateSignOut().catch(() => {
       dispatch(userDetailsRequestFailed());
     });
   };
@@ -112,7 +116,7 @@ export function signOut() {
 
 export function listenForAuthChanges() {
   return (dispatch) => {
-    auth.onAuthStateChanged((user) => {
+    authChangeListener((user) => {
       dispatch(receiveUserDetails(user));
     }, () => userDetailsRequestFailed());
   };
