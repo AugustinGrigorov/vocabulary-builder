@@ -10,6 +10,8 @@ import {
   faTrophy,
   faSpinner,
   faExclamationTriangle,
+  faSearch,
+  faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 import rootReducer from './reducers';
@@ -17,7 +19,15 @@ import registerServiceWorker from './registerServiceWorker';
 import App from './App';
 import './index.css';
 
-library.add(faCaretDown, faMinusSquare, faTrophy, faSpinner, faExclamationTriangle);
+library.add(
+  faCaretDown,
+  faMinusSquare,
+  faTrophy,
+  faSpinner,
+  faExclamationTriangle,
+  faSearch,
+  faPlusCircle,
+);
 
 const reduxDevtoolsExtensionHook = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';
 const composeEnhancers = window[reduxDevtoolsExtensionHook] || compose;

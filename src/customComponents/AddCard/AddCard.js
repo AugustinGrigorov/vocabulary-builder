@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { addEntry as addEntryAction } from '../../actions';
 import Card from '../../genericComponents/Card';
 
@@ -89,6 +90,11 @@ const Submit = styled.input`
   margin: 0 auto;
 `;
 
+const AddIcon = styled(FontAwesomeIcon)`
+  color: #4CAF50;
+  font-size: 32px;
+`;
+
 const initialState = {
   entryData: {
     word: '',
@@ -160,7 +166,7 @@ class AddCard extends React.Component {
 
     return (
       <Card
-        front={<Word>+</Word>}
+        front={<Word><AddIcon icon="plus-circle" /></Word>}
         back={
           (
             <Fragment>

@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fetchDictionaryForUser as fetchDictionaryForUserAction } from '../../actions';
 import { dictionaryType, entryType, userType } from '../../types';
 import AddCard from '../../customComponents/AddCard';
 import WordCard from '../../customComponents/WordCard';
 
-const Container = styled.div`
+const CardContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -17,30 +18,86 @@ const Container = styled.div`
   }
 `;
 
+const Search = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 24px auto;
+  width: 240px;
+  border-bottom: 2px solid #455A64;
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  font-size: 18px;
+  padding: 4px;
+  border: none;
+  outline: none;
+  appearance: none;
+`;
+
+const SearchIcon = styled(FontAwesomeIcon)`
+  font-size: 18px;
+  padding: 4px;
+  justify-self: center;
+  align-self: center;
+`;
+
+const Message = styled.h2`
+  margin: auto;
+  text-align: center;
+`;
+
+function filterEntriesOnSearchTerm(entries, searchTerm) {
+  return entries.filter(entry => entry.word.indexOf(searchTerm) !== -1);
+}
+
 class Gallery extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      searchTerm: '',
+    };
     const { dictionary, user, fetchDictionaryForUser } = this.props;
     if (!dictionary.initialized) fetchDictionaryForUser(user);
   }
 
   render() {
     const { dictionary, entryAdditionQueue, entryDeletionQueueIds } = this.props;
+    const { searchTerm } = this.state;
+
+    const committedEntires = filterEntriesOnSearchTerm(dictionary.data, searchTerm);
+    const pendingEntries = filterEntriesOnSearchTerm(entryAdditionQueue, searchTerm);
+    const noResults = searchTerm.length && !(committedEntires.length + pendingEntries.length);
 
     return (
-      <Container>
-        <AddCard />
-        {dictionary.data.map(entry => (
-          <WordCard
-            key={entry.id}
-            entry={entry}
-            queued={entryDeletionQueueIds.includes(entry.id)}
+      <Fragment>
+        <Search>
+          <SearchInput
+            id="searchTerm"
+            autoCapitalize="none"
+            name="searchTerm"
+            type="search"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={event => this.setState({ searchTerm: event.target.value })}
           />
-        ))}
-        {entryAdditionQueue.map(entry => (
-          <WordCard key={entry.id} entry={entry} queued />
-        ))}
-      </Container>
+          <SearchIcon icon="search" />
+        </Search>
+        <CardContainer>
+          {!searchTerm.length ? <AddCard /> : null}
+          {committedEntires.map(entry => (
+            <WordCard
+              key={entry.id}
+              entry={entry}
+              queued={entryDeletionQueueIds.includes(entry.id)}
+            />
+          ))}
+          {pendingEntries.map(entry => (
+            <WordCard key={entry.id} entry={entry} queued />
+          ))}
+        </CardContainer>
+        {noResults ? <Message>No results</Message> : null}
+      </Fragment>
     );
   }
 }
