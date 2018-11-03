@@ -48,7 +48,8 @@ const Message = styled.h2`
 `;
 
 function filterEntriesOnSearchTerm(entries, searchTerm) {
-  return entries.filter(entry => entry.word.indexOf(searchTerm) !== -1);
+  const searchRegex = new RegExp(searchTerm, 'i');
+  return entries.filter(entry => searchRegex.test(entry.word));
 }
 
 class Gallery extends Component {
