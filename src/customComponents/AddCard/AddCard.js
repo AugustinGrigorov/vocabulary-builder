@@ -132,7 +132,7 @@ class AddCard extends React.Component {
     e.preventDefault();
     const invalidInputFields = validateEntryData(entryData);
     if (!invalidInputFields.length) {
-      addEntry({ entryData, user });
+      addEntry({ entryData, userId: user.details.uid });
       this.setState(initialState);
     } else {
       this.setState({ invalidInputFields });

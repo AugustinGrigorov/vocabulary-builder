@@ -42,38 +42,36 @@ function dequeueCompleted(dictionary) {
   };
 }
 
-export function fetchDictionaryForUser({ details }) {
+export function fetchDictionaryForUser(userId) {
   return (dispatch) => {
-    if (details && details.uid) {
-      db.collection('users').doc(details.uid).get()
-        .then((doc) => {
-          const dictionary = doc.data().words;
-          dispatch(receiveDictionary(dictionary));
-          dispatch(dequeueCompleted(dictionary));
-        });
-    }
+    db.collection('users').doc(userId).get()
+      .then((doc) => {
+        const dictionary = doc.data().words;
+        dispatch(receiveDictionary(dictionary));
+        dispatch(dequeueCompleted(dictionary));
+      });
   };
 }
 
-export function addEntry({ entryData, user }) {
+export function addEntry({ entryData, userId }) {
   return (dispatch) => {
     const entry = {
       id: nanoid(),
       ...entryData,
     };
     dispatch(queueEntryForAddition(entry));
-    db.collection('users').doc(user.details.uid).update({
+    db.collection('users').doc(userId).update({
       words: firestore.FieldValue.arrayUnion(entry),
-    }).then(() => dispatch(fetchDictionaryForUser(user)));
+    }).then(() => dispatch(fetchDictionaryForUser(userId)));
   };
 }
 
-export function removeWord({ entry, user }) {
+export function removeWord({ entry, userId }) {
   return (dispatch) => {
     dispatch(queueEntryForDeletion(entry));
-    db.collection('users').doc(user.details.uid).update({
+    db.collection('users').doc(userId).update({
       words: firestore.FieldValue.arrayRemove(entry),
-    }).then(() => dispatch(fetchDictionaryForUser(user)));
+    }).then(() => dispatch(fetchDictionaryForUser(userId)));
   };
 }
 
@@ -118,18 +116,19 @@ export function listenForAuthChanges() {
   return (dispatch) => {
     authChangeListener((user) => {
       dispatch(receiveUserDetails(user));
+      if (user.uid) dispatch(fetchDictionaryForUser(user.uid));
     }, () => userDetailsRequestFailed());
   };
 }
 
-function setQuizQueue(queue) {
+function setPracticeQueue(queue) {
   return {
     type: 'SET_QUIZ_QUEUE',
     queue,
   };
 }
 
-function setCurrentQuizEntry(entry) {
+function setCurrentPracticeEntry(entry) {
   return {
     type: 'SET_CURRENT_QUIZ_ENTRY',
     entry,
@@ -144,12 +143,12 @@ export function nextWordFrom(currentEntries) {
       ...currentEntries.slice(0, wordPosition),
       ...currentEntries.slice(wordPosition + 1),
     ];
-    dispatch(setQuizQueue(remainingEntries));
-    dispatch(setCurrentQuizEntry(selectedEntry));
+    dispatch(setPracticeQueue(remainingEntries));
+    dispatch(setCurrentPracticeEntry(selectedEntry));
   };
 }
 
-export function startQuiz() {
+export function startPractice() {
   return {
     type: 'START_QUIZ',
   };

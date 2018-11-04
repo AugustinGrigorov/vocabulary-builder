@@ -1,4 +1,4 @@
-const quiz = (state = {
+const practice = (state = {
   wordQueue: [],
   attempted: 0,
   correct: 0,
@@ -31,4 +31,4 @@ const quiz = (state = {
   }
 };
 
-export default quiz;
+export default practice;

@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import {
   nextWordFrom as nextWordFromAction,
-  fetchDictionaryForUser as fetchDictionaryForUserAction,
-  startQuiz as startQuizAction,
+  startPractice as startPracticeAction,
   updateScore as updateScoreAction,
 } from '../../actions';
-import { dictionaryType, userType, entryType } from '../../types';
+import { dictionaryType, entryType } from '../../types';
 import { Error, Loading } from '../genericViews';
 import Result from './Result';
 
@@ -47,7 +46,7 @@ const SubmitButton = styled.input`
   background: #388E3C;
 `;
 
-const QuizBox = styled.div`
+const PracticeBox = styled.div`
   max-width: 480px;
   margin: 24px auto;
   padding: 10px;
@@ -106,7 +105,7 @@ const Answer = styled.input`
   }}
 `;
 
-class Quiz extends Component {
+class Practice extends Component {
   constructor(props) {
     super(props);
 
@@ -117,15 +116,12 @@ class Quiz extends Component {
     this.revealWord = this.revealWord.bind(this);
 
     const {
-      startQuiz,
+      startPractice,
       nextWordFrom,
       dictionary,
-      fetchDictionaryForUser,
-      user,
     } = this.props;
 
-    startQuiz();
-    if (!dictionary.initialized) fetchDictionaryForUser(user);
+    startPractice();
     if (dictionary.data.length) nextWordFrom(dictionary.data);
   }
 
@@ -184,7 +180,7 @@ class Quiz extends Component {
     if (dictionary.initialized && !dictionary.data.length) return <Error message="No words in dictionary." />;
     if (!currentEntry) return <Result attempted={attempted} correct={correct} />;
     return (
-      <QuizBox grade={grade}>
+      <PracticeBox grade={grade}>
         {currentEntry
           ? (
             <Form
@@ -210,7 +206,7 @@ class Quiz extends Component {
             </Form>
           ) : null
         }
-      </QuizBox>
+      </PracticeBox>
     );
   }
 }
@@ -226,36 +222,32 @@ function NextStep({ grade, loadNextWord, revealWord }) {
   }
 }
 
-Quiz.propTypes = {
+Practice.propTypes = {
   dictionary: dictionaryType.isRequired,
-  user: userType.isRequired,
-  fetchDictionaryForUser: PropTypes.func.isRequired,
   wordQueue: PropTypes.arrayOf(entryType).isRequired,
   currentEntry: entryType,
   nextWordFrom: PropTypes.func.isRequired,
-  startQuiz: PropTypes.func.isRequired,
+  startPractice: PropTypes.func.isRequired,
   attempted: PropTypes.number.isRequired,
   correct: PropTypes.number.isRequired,
   updateScore: PropTypes.func.isRequired,
 };
 
-Quiz.defaultProps = {
+Practice.defaultProps = {
   currentEntry: null,
 };
 
 const mapStateToProps = state => ({
-  currentEntry: state.quiz.currentEntry,
-  wordQueue: state.quiz.wordQueue,
+  currentEntry: state.practice.currentEntry,
+  wordQueue: state.practice.wordQueue,
   dictionary: state.dictionary,
-  user: state.user,
-  attempted: state.quiz.attempted,
-  correct: state.quiz.correct,
+  attempted: state.practice.attempted,
+  correct: state.practice.correct,
 });
 
 
 const mapDispatchToProps = dispatch => ({
-  startQuiz: () => dispatch(startQuizAction()),
-  fetchDictionaryForUser: user => dispatch(fetchDictionaryForUserAction(user)),
+  startPractice: () => dispatch(startPracticeAction()),
   nextWordFrom: dictionary => dispatch(nextWordFromAction(dictionary)),
   updateScore: (attempted, correct) => dispatch(updateScoreAction({ attempted, correct })),
 });
@@ -263,4 +255,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Quiz);
+)(Practice);

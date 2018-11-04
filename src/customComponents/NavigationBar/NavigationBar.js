@@ -19,16 +19,31 @@ const Container = styled.nav`
   height: 64px;
 `;
 
-const NavLink = styled(Link)`
+const LinkContaienr = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  margin: 12px;
+  width: 100%;
+  overflow: auto;
+  margin: 8px;
+  background: #66BB6A;
+  border-radius: 24px;
+  &::after{
+    content: '\0a0';
+    margin-left: -5px;
+  }
+`;
+
+const NavLink = styled(Link)`
+  display: flex;
+  margin: 0 8px;
   font-size: 18px;
   font-weight: bold;
   color: #fff;
   text-decoration: none;
+  background: #1B5E20;
+  padding: 8px 12px;
+  border-radius: 18px;
 `;
 
 const RightSection = styled.div`
@@ -50,21 +65,26 @@ const SignInButton = styled(InteractiveButton)`
 function NavigationBar({ user, signIn, signOut }) {
   return (
     <Container>
-      <NavLink to="/">
-        Home
-      </NavLink>
-      {
-        user.details ? (
-          <Fragment>
-            <NavLink to="/gallery">
-              Gallery
-            </NavLink>
-            <NavLink to="/quiz">
-              Quiz
-            </NavLink>
-          </Fragment>
-        ) : null
-      }
+      <LinkContaienr>
+        <NavLink to="/">
+          Home
+        </NavLink>
+        {
+          user.details ? (
+            <Fragment>
+              <NavLink to="/inspect">
+                Inspect
+              </NavLink>
+              <NavLink to="/learn">
+                Learn
+              </NavLink>
+              <NavLink to="/practice">
+                Practice
+              </NavLink>
+            </Fragment>
+          ) : null
+        }
+      </LinkContaienr>
       <RightSection>
         {
           user.details

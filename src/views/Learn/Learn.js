@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { fetchDictionaryForUser as fetchDictionaryForUserAction } from '../../actions';
-import { dictionaryType, entryType, userType } from '../../types';
+import { dictionaryType, entryType } from '../../types';
 import AddCard from '../../customComponents/AddCard';
 import WordCard from '../../customComponents/WordCard';
 
@@ -52,18 +51,17 @@ function filterEntriesOnSearchTerm(entries, searchTerm) {
   return entries.filter(entry => searchRegex.test(entry.word));
 }
 
-class Gallery extends Component {
+class Learn extends Component {
   constructor(props) {
     super(props);
     this.state = {
       searchTerm: '',
     };
-    const { dictionary, user, fetchDictionaryForUser } = this.props;
-    if (!dictionary.initialized) fetchDictionaryForUser(user);
   }
 
   render() {
     const { dictionary, entryAdditionQueue, entryDeletionQueueIds } = this.props;
+    console.log(dictionary)
     const { searchTerm } = this.state;
 
     const committedEntires = filterEntriesOnSearchTerm(dictionary.data, searchTerm);
@@ -103,26 +101,19 @@ class Gallery extends Component {
   }
 }
 
-Gallery.propTypes = {
+Learn.propTypes = {
   dictionary: dictionaryType.isRequired,
   entryAdditionQueue: PropTypes.arrayOf(entryType).isRequired,
   entryDeletionQueueIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  fetchDictionaryForUser: PropTypes.func.isRequired,
-  user: userType.isRequired,
 };
 
 const mapStateToProps = state => ({
   dictionary: state.dictionary,
-  entryAdditionQueue: state.gallery.entryAdditionQueue,
-  entryDeletionQueueIds: state.gallery.entryDeletionQueueIds,
+  entryAdditionQueue: state.learn.entryAdditionQueue,
+  entryDeletionQueueIds: state.learn.entryDeletionQueueIds,
   user: state.user,
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchDictionaryForUser: user => dispatch(fetchDictionaryForUserAction(user)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(Gallery);
+)(Learn);

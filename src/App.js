@@ -9,8 +9,9 @@ import {
 } from './actions';
 import NavigationBar from './customComponents/NavigationBar';
 import Home from './views/Home';
-import Gallery from './views/Gallery';
-import Quiz from './views/Quiz';
+import Inspect from './views/Inspect';
+import Learn from './views/Learn';
+import Practice from './views/Practice';
 import { Error, Loading } from './views/genericViews';
 
 const PrivateRoute = ({
@@ -53,16 +54,24 @@ class App extends Component {
               dictionary={dictionary}
               signIn={signIn}
               exact
-              path="/gallery"
-              component={Gallery}
+              path="/inspect"
+              component={Inspect}
             />
             <PrivateRoute
               user={user}
               dictionary={dictionary}
               signIn={signIn}
               exact
-              path="/quiz"
-              component={Quiz}
+              path="/learn"
+              component={Learn}
+            />
+            <PrivateRoute
+              user={user}
+              dictionary={dictionary}
+              signIn={signIn}
+              exact
+              path="/practice"
+              component={Practice}
             />
           </Fragment>
         </Router>

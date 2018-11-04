@@ -93,7 +93,7 @@ function WordCard({
         (
           <Fragment>
             <ButtonsContainer>
-              <ControlButtonWrapper type="button" onClick={() => removeWord({ entry, user })}>
+              <ControlButtonWrapper type="button" onClick={() => removeWord({ entry, userId: user.details.uid })}>
                 <RemoveButton icon="minus-square" />
               </ControlButtonWrapper>
             </ButtonsContainer>

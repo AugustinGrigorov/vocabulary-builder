@@ -1,4 +1,4 @@
-const gallery = (state = {
+const learn = (state = {
   entryAdditionQueue: [],
   entryDeletionQueueIds: [],
 }, action) => {
@@ -31,4 +31,4 @@ const gallery = (state = {
   }
 };
 
-export default gallery;
+export default learn;
