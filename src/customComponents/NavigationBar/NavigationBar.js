@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -34,16 +34,19 @@ const LinkContaienr = styled.div`
   }
 `;
 
-const NavLink = styled(Link)`
+const StyledLink = styled(NavLink)`
   display: flex;
   margin: 0 8px;
   font-size: 18px;
   font-weight: bold;
   color: #fff;
   text-decoration: none;
-  background: #1B5E20;
   padding: 8px 12px;
   border-radius: 18px;
+
+  &.selected {
+    background: #1B5E20;
+  }
 `;
 
 const RightSection = styled.div`
@@ -66,21 +69,37 @@ function NavigationBar({ user, signIn, signOut }) {
   return (
     <Container>
       <LinkContaienr>
-        <NavLink to="/">
+        <StyledLink
+          exact
+          activeClassName="selected"
+          to="/"
+        >
           Home
-        </NavLink>
+        </StyledLink>
         {
           user.details ? (
             <Fragment>
-              <NavLink to="/inspect">
+              <StyledLink
+                exact
+                activeClassName="selected"
+                to="/inspect"
+              >
                 Inspect
-              </NavLink>
-              <NavLink to="/learn">
+              </StyledLink>
+              <StyledLink
+                exact
+                activeClassName="selected"
+                to="/learn"
+              >
                 Learn
-              </NavLink>
-              <NavLink to="/practice">
+              </StyledLink>
+              <StyledLink
+                exact
+                activeClassName="selected"
+                to="/practice"
+              >
                 Practice
-              </NavLink>
+              </StyledLink>
             </Fragment>
           ) : null
         }

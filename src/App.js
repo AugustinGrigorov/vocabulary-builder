@@ -47,7 +47,7 @@ class App extends Component {
       <div className="App">
         <Router>
           <Fragment>
-            <NavigationBar />
+            <Route path="*" component={NavigationBar} />
             <Route exact path="/" component={Home} />
             <PrivateRoute
               user={user}
