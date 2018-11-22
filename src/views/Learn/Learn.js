@@ -61,7 +61,6 @@ class Learn extends Component {
 
   render() {
     const { dictionary, entryAdditionQueue, entryDeletionQueueIds } = this.props;
-    console.log(dictionary)
     const { searchTerm } = this.state;
 
     const committedEntires = filterEntriesOnSearchTerm(dictionary.data, searchTerm);

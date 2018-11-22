@@ -44,11 +44,17 @@ function dequeueCompleted(dictionary) {
 
 export function fetchDictionaryForUser(userId) {
   return (dispatch) => {
-    db.collection('users').doc(userId).get()
+    const userRef = db.collection('users').doc(userId);
+    userRef.get()
       .then((doc) => {
-        const dictionary = doc.data().words;
-        dispatch(receiveDictionary(dictionary));
-        dispatch(dequeueCompleted(dictionary));
+        if (doc.exists) {
+          const dictionary = doc.data().words;
+          dispatch(receiveDictionary(dictionary));
+          dispatch(dequeueCompleted(dictionary));
+        } else {
+          userRef.set({ words: [] });
+          dispatch(receiveDictionary([]));
+        }
       });
   };
 }
@@ -116,7 +122,7 @@ export function listenForAuthChanges() {
   return (dispatch) => {
     authChangeListener((user) => {
       dispatch(receiveUserDetails(user));
-      if (user.uid) dispatch(fetchDictionaryForUser(user.uid));
+      if (user) dispatch(fetchDictionaryForUser(user.uid));
     }, () => userDetailsRequestFailed());
   };
 }

@@ -63,6 +63,7 @@ const RightSection = styled.div`
 
 const SignInButton = styled(InteractiveButton)`
   color: #FFF;
+  width: 80px;
 `;
 
 function NavigationBar({ user, signIn, signOut }) {
