@@ -10,10 +10,6 @@ import {
 
 const db = firestore();
 
-db.settings({
-  timestampsInSnapshots: true,
-});
-
 function receiveDictionary(dictionary) {
   return {
     type: 'RECEIVE_DICTIONARY',
