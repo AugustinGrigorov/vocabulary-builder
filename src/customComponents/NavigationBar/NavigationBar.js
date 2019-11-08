@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import {
   signIn as signInAction,
   signOut as signOutAction,
@@ -79,7 +79,7 @@ function NavigationBar({ user, signIn, signOut }) {
         </StyledLink>
         {
           user.details ? (
-            <Fragment>
+            <>
               <StyledLink
                 exact
                 activeClassName="selected"
@@ -101,7 +101,7 @@ function NavigationBar({ user, signIn, signOut }) {
               >
                 Practice
               </StyledLink>
-            </Fragment>
+            </>
           ) : null
         }
       </LinkContaienr>
@@ -126,12 +126,12 @@ NavigationBar.defaultProps = {
   user: null,
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   signIn: () => dispatch(signInAction()),
   signOut: () => dispatch(signOutAction()),
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.user,
 });
 

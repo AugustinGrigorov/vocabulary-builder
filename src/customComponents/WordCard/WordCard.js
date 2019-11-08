@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { removeWord as removeWordAction } from '../../actions';
 import { userType } from '../../types';
@@ -91,7 +91,7 @@ function WordCard({
       }
       back={
         (
-          <Fragment>
+          <>
             <ButtonsContainer>
               <ControlButtonWrapper type="button" onClick={() => removeWord({ entry, userId: user.details.uid })}>
                 <RemoveButton icon="minus-square" />
@@ -105,7 +105,7 @@ function WordCard({
               {example}
               &quot;
             </Example>
-          </Fragment>
+          </>
         )
       }
     />
@@ -123,12 +123,12 @@ WordCard.propTypes = {
   removeWord: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.user,
 });
 
-const mapDispatchToProps = dispatch => ({
-  removeWord: payload => dispatch(removeWordAction(payload)),
+const mapDispatchToProps = (dispatch) => ({
+  removeWord: (payload) => dispatch(removeWordAction(payload)),
 });
 
 export default connect(

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 const ProfileImage = styled.img`
   width: 40px;

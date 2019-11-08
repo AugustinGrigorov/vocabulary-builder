@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -46,7 +46,7 @@ class App extends Component {
     return (
       <div className="App">
         <Router>
-          <Fragment>
+          <>
             <Route path="*" component={NavigationBar} />
             <Route exact path="/" component={Home} />
             <PrivateRoute
@@ -73,7 +73,7 @@ class App extends Component {
               path="/practice"
               component={Practice}
             />
-          </Fragment>
+          </>
         </Router>
       </div>
     );
@@ -99,13 +99,13 @@ App.defaultProps = {
   user: null,
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   listenForAuthChanges: () => dispatch(listenForAuthChangesAction()),
   signIn: () => dispatch(signInAction()),
   signOut: () => dispatch(signOutAction()),
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.user,
   dictionary: state.dictionary,
 });

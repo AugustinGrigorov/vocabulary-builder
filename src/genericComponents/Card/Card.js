@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
+import styled, { css } from 'styled-components/macro';
 
 const cardBaseStyle = css`
   width: 240px;
@@ -14,7 +14,7 @@ const Container = styled.div`
   vertical-align: top;
   perspective: 1000px;
   outline: none;
-  opacity: ${props => (props.queued ? '0.6' : null)}
+  opacity: ${(props) => (props.queued ? '0.6' : null)}
 `;
 
 const Body = styled.div`
@@ -22,7 +22,7 @@ const Body = styled.div`
   transition: .5s;
   transform-style: preserve-3d;
   position: relative;
-  transform: ${props => (props.focused ? 'rotateY(180deg)' : 'none')};
+  transform: ${(props) => (props.focused ? 'rotateY(180deg)' : 'none')};
 `;
 
 const CardContent = styled.div`
@@ -47,9 +47,9 @@ const Front = styled(CardContent)`
 
 const Back = styled(CardContent)`
   transform: rotateY(180deg);
-  background: ${props => props.backgroundColor};
-  border-color: ${props => props.borderColor};
-  color: ${props => props.color};
+  background: ${(props) => props.backgroundColor};
+  border-color: ${(props) => props.borderColor};
+  color: ${(props) => props.color};
 `;
 
 class Card extends Component {
@@ -88,8 +88,8 @@ class Card extends Component {
     return (
       <Container
         tabIndex={0}
-        onFocus={e => this.flipCard(e, true)}
-        onBlur={e => this.flipCard(e, false)}
+        onFocus={(e) => this.flipCard(e, true)}
+        onBlur={(e) => this.flipCard(e, false)}
         role="button"
         ref={this.elementReferece}
         queued={queued}

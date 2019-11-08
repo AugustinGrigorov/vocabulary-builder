@@ -16,13 +16,13 @@ const learn = (state = {
     case 'DEQUEUE_COMPLETED':
       return {
         entryAdditionQueue: state.entryAdditionQueue.filter(
-          entry => !action.dictionary.some(
-            dictionaryEntry => entry.id === dictionaryEntry.id,
+          (entry) => !action.dictionary.some(
+            (dictionaryEntry) => entry.id === dictionaryEntry.id,
           ),
         ),
         entryDeletionQueueIds: state.entryDeletionQueueIds.filter(
-          id => action.dictionary.some(
-            dictionaryEntry => id === dictionaryEntry.id,
+          (id) => action.dictionary.some(
+            (dictionaryEntry) => id === dictionaryEntry.id,
           ),
         ),
       };

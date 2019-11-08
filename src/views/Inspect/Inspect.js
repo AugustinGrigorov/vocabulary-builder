@@ -31,7 +31,7 @@ Inspect.propTypes = {
   dictionary: dictionaryType.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   dictionary: state.dictionary,
 });
 

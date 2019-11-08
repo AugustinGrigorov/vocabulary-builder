@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { addEntry as addEntryAction } from '../../actions';
 import Card from '../../genericComponents/Card';
@@ -27,7 +27,7 @@ const Input = styled.input`
   border-bottom: 2px solid;
   border-radius: 0;
   outline: none;
-  border-color: ${props => (props.hasError ? '#E57373' : '#455A64')}
+  border-color: ${(props) => (props.hasError ? '#E57373' : '#455A64')}
 `;
 
 const Select = styled.select`
@@ -53,7 +53,7 @@ const ColorOption = styled.label`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border-color: ${props => (props.isActive ? '#448AFF' : 'transparent')};
+  border-color: ${(props) => (props.isActive ? '#448AFF' : 'transparent')};
   margin: 0 2px;
   background: ${(props) => {
     switch (props.color) {
@@ -114,7 +114,7 @@ const colorOptions = [
 ];
 
 function validateEntryData(entryData) {
-  return Object.keys(entryData).filter(field => !entryData[field].length);
+  return Object.keys(entryData).filter((field) => !entryData[field].length);
 }
 
 class AddCard extends React.Component {
@@ -169,7 +169,7 @@ class AddCard extends React.Component {
         front={<Word><AddIcon icon="plus-circle" /></Word>}
         back={
           (
-            <Fragment>
+            <>
               <From onSubmit={this.handleSubmit}>
                 <Input
                   id="word"
@@ -213,7 +213,7 @@ class AddCard extends React.Component {
                 />
                 <Submit type="submit" value="Submit" />
                 <ColorPicker>
-                  {colorOptions.map(color => (
+                  {colorOptions.map((color) => (
                     <li key={color}>
                       <ColorOption
                         isActive={theme === color}
@@ -230,7 +230,7 @@ class AddCard extends React.Component {
                   ))}
                 </ColorPicker>
               </From>
-            </Fragment>
+            </>
           )
         }
       />
@@ -247,12 +247,12 @@ AddCard.defaultProps = {
   user: null,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.user,
 });
 
-const mapDispatchToProps = dispatch => ({
-  addEntry: payload => dispatch(addEntryAction(payload)),
+const mapDispatchToProps = (dispatch) => ({
+  addEntry: (payload) => dispatch(addEntryAction(payload)),
 });
 
 export default connect(

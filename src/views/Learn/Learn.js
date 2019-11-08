@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { dictionaryType, entryType } from '../../types';
 import AddCard from '../../customComponents/AddCard';
@@ -48,7 +48,7 @@ const Message = styled.h2`
 
 function filterEntriesOnSearchTerm(entries, searchTerm) {
   const searchRegex = new RegExp(searchTerm, 'i');
-  return entries.filter(entry => searchRegex.test(entry.word));
+  return entries.filter((entry) => searchRegex.test(entry.word));
 }
 
 class Learn extends Component {
@@ -68,7 +68,7 @@ class Learn extends Component {
     const noResults = searchTerm.length && !(committedEntires.length + pendingEntries.length);
 
     return (
-      <Fragment>
+      <>
         <Search>
           <SearchInput
             id="searchTerm"
@@ -77,25 +77,25 @@ class Learn extends Component {
             type="search"
             placeholder="Search"
             value={searchTerm}
-            onChange={event => this.setState({ searchTerm: event.target.value })}
+            onChange={(event) => this.setState({ searchTerm: event.target.value })}
           />
           <SearchIcon icon="search" />
         </Search>
         <CardContainer>
           {!searchTerm.length ? <AddCard /> : null}
-          {committedEntires.map(entry => (
+          {committedEntires.map((entry) => (
             <WordCard
               key={entry.id}
               entry={entry}
               queued={entryDeletionQueueIds.includes(entry.id)}
             />
           ))}
-          {pendingEntries.map(entry => (
+          {pendingEntries.map((entry) => (
             <WordCard key={entry.id} entry={entry} queued />
           ))}
         </CardContainer>
         {noResults ? <Message>No results</Message> : null}
-      </Fragment>
+      </>
     );
   }
 }
@@ -106,7 +106,7 @@ Learn.propTypes = {
   entryDeletionQueueIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   dictionary: state.dictionary,
   entryAdditionQueue: state.learn.entryAdditionQueue,
   entryDeletionQueueIds: state.learn.entryDeletionQueueIds,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
+import styled, { css } from 'styled-components/macro';
 import {
   nextWordFrom as nextWordFromAction,
   startPractice as startPracticeAction,
@@ -204,8 +204,7 @@ class Practice extends Component {
                 revealWord={this.revealWord}
               />
             </Form>
-          ) : null
-        }
+          ) : null}
       </PracticeBox>
     );
   }
@@ -237,7 +236,7 @@ Practice.defaultProps = {
   currentEntry: null,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentEntry: state.practice.currentEntry,
   wordQueue: state.practice.wordQueue,
   dictionary: state.dictionary,
@@ -246,9 +245,9 @@ const mapStateToProps = state => ({
 });
 
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   startPractice: () => dispatch(startPracticeAction()),
-  nextWordFrom: dictionary => dispatch(nextWordFromAction(dictionary)),
+  nextWordFrom: (dictionary) => dispatch(nextWordFromAction(dictionary)),
   updateScore: (attempted, correct) => dispatch(updateScoreAction({ attempted, correct })),
 });
 

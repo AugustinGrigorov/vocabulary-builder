@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import InteractiveButton from './InteractiveButton';
 import UserBadge from './UserBadge';
 
@@ -63,8 +63,7 @@ export default class ProfileControls extends Component {
                 </MenuButton>
               </MenuItem>
             </Menu>
-          ) : null
-        }
+          ) : null}
       </Container>
     );
   }
