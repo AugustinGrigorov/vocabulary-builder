@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 
-export const userType = PropTypes.shape({});
+export const userType = PropTypes.shape({
+  details: PropTypes.shape({
+    uid: PropTypes.string,
+  }),
+});
 
 export const dictionaryType = PropTypes.shape({
   fetching: PropTypes.bool,

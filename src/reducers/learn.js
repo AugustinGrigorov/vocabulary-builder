@@ -1,4 +1,5 @@
 const learn = (state = {
+  editedEntryId: null,
   entryAdditionQueue: [],
   entryDeletionQueueIds: [],
 }, action) => {
@@ -25,6 +26,16 @@ const learn = (state = {
             (dictionaryEntry) => id === dictionaryEntry.id,
           ),
         ),
+      };
+    case 'START_EDIT':
+      return {
+        ...state,
+        editedEntryId: action.entryId,
+      };
+    case 'FINISH_EDIT':
+      return {
+        ...state,
+        editedEntryId: null,
       };
     default:
       return state;

@@ -1,3 +1,5 @@
+// TODO: Move action strings to constants
+
 import nanoid from 'nanoid';
 import { firestore } from 'firebase/app';
 import 'firebase/firestore';
@@ -27,6 +29,13 @@ function queueEntryForAddition(entry) {
 function queueEntryForDeletion(entry) {
   return {
     type: 'QUEUE_ENTRY_FOR_DELETION',
+    entry,
+  };
+}
+
+function removeEntry(entry) {
+  return {
+    type: 'REMOVE_ENTRY',
     entry,
   };
 }
@@ -65,6 +74,48 @@ export function addEntry({ entryData, userId }) {
     db.collection('users').doc(userId).update({
       words: firestore.FieldValue.arrayUnion(entry),
     }).then(() => dispatch(fetchDictionaryForUser(userId)));
+  };
+}
+
+export function startEdit(entryId) {
+  return {
+    type: 'START_EDIT',
+    entryId,
+  };
+}
+
+export function finishEdit() {
+  return {
+    type: 'FINISH_EDIT',
+  };
+}
+
+
+export function editEntry({
+  oldEntry,
+  entryId,
+  entryData,
+  userId,
+}) {
+  return async (dispatch) => {
+    const entry = {
+      id: entryId,
+      ...entryData,
+    };
+
+    dispatch(finishEdit());
+    dispatch(removeEntry(oldEntry));
+    dispatch(queueEntryForAddition(entry));
+
+    await db.collection('users').doc(userId).update({
+      words: firestore.FieldValue.arrayRemove(oldEntry),
+    });
+
+    await db.collection('users').doc(userId).update({
+      words: firestore.FieldValue.arrayUnion(entry),
+    });
+
+    dispatch(fetchDictionaryForUser(userId));
   };
 }
 

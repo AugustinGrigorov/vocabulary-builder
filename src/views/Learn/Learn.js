@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { dictionaryType, entryType } from '../../types';
-import AddCard from '../../customComponents/AddCard';
+import EditorCard from '../../customComponents/EditorCard';
 import WordCard from '../../customComponents/WordCard';
 
 const CardContainer = styled.div`
@@ -82,7 +83,7 @@ class Learn extends Component {
           <SearchIcon icon="search" />
         </Search>
         <CardContainer>
-          {!searchTerm.length ? <AddCard /> : null}
+          {!searchTerm.length ? <EditorCard /> : null}
           {committedEntires.map((entry) => (
             <WordCard
               key={entry.id}

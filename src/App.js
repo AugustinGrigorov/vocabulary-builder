@@ -13,6 +13,8 @@ import Inspect from './views/Inspect';
 import Learn from './views/Learn';
 import Practice from './views/Practice';
 import { Error, Loading } from './views/genericViews';
+import { userType } from './types';
+
 
 const PrivateRoute = ({
   component: View,
@@ -92,7 +94,7 @@ App.propTypes = {
   }).isRequired,
   listenForAuthChanges: PropTypes.func.isRequired,
   signIn: PropTypes.func.isRequired,
-  user: PropTypes.shape({}),
+  user: userType,
 };
 
 App.defaultProps = {

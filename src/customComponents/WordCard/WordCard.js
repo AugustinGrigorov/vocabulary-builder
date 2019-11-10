@@ -3,9 +3,15 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { removeWord as removeWordAction } from '../../actions';
+
+import {
+  removeWord as removeWordAction,
+  startEdit as startEditAction,
+} from '../../actions';
 import { userType } from '../../types';
+
 import Card from '../../genericComponents/Card';
+import WordForm from '../../genericComponents/WordForm';
 
 const themes = {
   red: {
@@ -33,6 +39,8 @@ const ButtonsContainer = styled.div`
   position: absolute;
   top: 8px;
   right: 8px;
+  display: flex;
+  flex-direction: row;
 `;
 
 const ControlButtonWrapper = styled.div`
@@ -41,9 +49,16 @@ const ControlButtonWrapper = styled.div`
   padding: 0;
   border: none;
   outline: none;
+  margin: 4px;
 `;
 
 const RemoveButton = styled(FontAwesomeIcon)`
+  color: #212121;
+  margin: 0;
+  font-size: 24px;
+`;
+
+const EditButton = styled(FontAwesomeIcon)`
   color: #212121;
   margin: 0;
   font-size: 24px;
@@ -70,65 +85,109 @@ function WordCard({
   user,
   entry,
   removeWord,
+  startEdit,
+  editedEntryId,
   ...props
+}) {
+  const {
+    id,
+    word,
+    theme,
+  } = entry;
+
+  const isBeingEdited = editedEntryId === id;
+
+  return (
+    <Card
+      {...props}
+      theme={isBeingEdited ? null : themes[theme]}
+      front={
+        (
+          <h2 className="Word">{word}</h2>
+        )
+      }
+      back={isBeingEdited ? (
+        <WordForm entry={entry} />
+      ) : (
+        <DisplayContent
+          removeWord={removeWord}
+          startEdit={startEdit}
+          entry={entry}
+          userId={user.details.uid}
+        />
+      )}
+    />
+  );
+}
+
+function DisplayContent({
+  removeWord,
+  startEdit,
+  entry,
+  userId,
 }) {
   const {
     word,
     type,
     definition,
     example,
-    theme,
   } = entry;
-
   return (
-    <Card
-      {...props}
-      theme={themes[theme]}
-      front={
-        (
-          <h2 className="Word">{word}</h2>
-        )
-      }
-      back={
-        (
-          <>
-            <ButtonsContainer>
-              <ControlButtonWrapper type="button" onClick={() => removeWord({ entry, userId: user.details.uid })}>
-                <RemoveButton icon="minus-square" />
-              </ControlButtonWrapper>
-            </ButtonsContainer>
-            <Word>{word}</Word>
-            <Type>{type}</Type>
-            <Definition>{definition}</Definition>
-            <Example>
-              &quot;
-              {example}
-              &quot;
-            </Example>
-          </>
-        )
-      }
-    />
+    <>
+      <ButtonsContainer>
+        <ControlButtonWrapper type="button" onClick={() => startEdit(entry.id)}>
+          <EditButton icon="pen-square" />
+        </ControlButtonWrapper>
+        <ControlButtonWrapper type="button" onClick={() => removeWord({ entry, userId })}>
+          <RemoveButton icon="minus-square" />
+        </ControlButtonWrapper>
+      </ButtonsContainer>
+      <Word>{word}</Word>
+      <Type>{type}</Type>
+      <Definition>{definition}</Definition>
+      <Example>
+        &quot;
+        {example}
+        &quot;
+      </Example>
+    </>
   );
 }
 
+const entryPropType = PropTypes.shape({
+  word: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  definition: PropTypes.string.isRequired,
+  theme: PropTypes.string.isRequired,
+});
+
+DisplayContent.propTypes = {
+  entry: entryPropType.isRequired,
+  userId: PropTypes.string.isRequired,
+  removeWord: PropTypes.func.isRequired,
+  startEdit: PropTypes.func.isRequired,
+};
+
 WordCard.propTypes = {
   user: userType.isRequired,
-  entry: PropTypes.shape({
-    word: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    definition: PropTypes.string.isRequired,
-    theme: PropTypes.string.isRequired,
-  }).isRequired,
+  entry: entryPropType.isRequired,
   removeWord: PropTypes.func.isRequired,
+  startEdit: PropTypes.func.isRequired,
+  editedEntryId: PropTypes.string,
+};
+
+WordCard.defaultProps = {
+  editedEntryId: null,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user,
+  editedEntryId: state.learn.editedEntryId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   removeWord: (payload) => dispatch(removeWordAction(payload)),
+  startEdit: (payload) => dispatch(startEditAction(payload)),
 });
 
 export default connect(

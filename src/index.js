@@ -12,6 +12,7 @@ import {
   faExclamationTriangle,
   faSearch,
   faPlusCircle,
+  faPenSquare,
 } from '@fortawesome/free-solid-svg-icons';
 
 import rootReducer from './reducers';
@@ -27,6 +28,7 @@ library.add(
   faExclamationTriangle,
   faSearch,
   faPlusCircle,
+  faPenSquare,
 );
 
 const reduxDevtoolsExtensionHook = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';

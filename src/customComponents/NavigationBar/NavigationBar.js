@@ -3,10 +3,13 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
+
 import {
   signIn as signInAction,
   signOut as signOutAction,
 } from '../../actions';
+import { userType } from '../../types';
+
 import InteractiveButton from './InteractiveButton';
 import ProfileControls from './ProfileControls';
 
@@ -117,7 +120,7 @@ function NavigationBar({ user, signIn, signOut }) {
 }
 
 NavigationBar.propTypes = {
-  user: PropTypes.shape({}),
+  user: userType,
   signIn: PropTypes.func.isRequired,
   signOut: PropTypes.func.isRequired,
 };
