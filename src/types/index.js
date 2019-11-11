@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
 
 export const userType = PropTypes.shape({
+  fetching: PropTypes.bool,
   details: PropTypes.shape({
     uid: PropTypes.string,
+    displayName: PropTypes.string,
+    photoURL: PropTypes.string,
   }),
 });
 

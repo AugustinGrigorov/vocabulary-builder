@@ -111,7 +111,7 @@ function NavigationBar({ user, signIn, signOut }) {
       <RightSection>
         {
           user.details
-            ? <ProfileControls userDetails={user.details} signOut={signOut} />
+            ? <ProfileControls user={user} signOut={signOut} />
             : <SignInButton type="button" onClick={signIn}>Sign in</SignInButton>
         }
       </RightSection>

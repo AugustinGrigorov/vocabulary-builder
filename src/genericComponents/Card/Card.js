@@ -47,9 +47,9 @@ const Front = styled(CardContent)`
 
 const Back = styled(CardContent)`
   transform: rotateY(180deg);
-  background: ${(props) => props.backgroundColor};
-  border-color: ${(props) => props.borderColor};
-  color: ${(props) => props.color};
+  background: ${({ backgroundColor }) => backgroundColor};
+  border-color: ${({ borderColor }) => borderColor};
+  color: ${({ color }) => color};
 `;
 
 class Card extends Component {
@@ -100,7 +100,11 @@ class Card extends Component {
           <Front>
             {front}
           </Front>
-          <Back {...theme}>
+          <Back
+            backgroundColor={theme.backgroundColor}
+            borderColor={theme.borderColor}
+            color={theme.color}
+          >
             {back}
           </Back>
         </Body>

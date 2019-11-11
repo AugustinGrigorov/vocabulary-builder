@@ -236,6 +236,16 @@ Practice.defaultProps = {
   currentEntry: null,
 };
 
+NextStep.propTypes = {
+  grade: PropTypes.string,
+  loadNextWord: PropTypes.func.isRequired,
+  revealWord: PropTypes.func.isRequired,
+};
+
+NextStep.defaultProps = {
+  grade: null,
+};
+
 const mapStateToProps = (state) => ({
   currentEntry: state.practice.currentEntry,
   wordQueue: state.practice.wordQueue,

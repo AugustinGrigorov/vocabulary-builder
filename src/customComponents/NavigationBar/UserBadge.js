@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components/macro';
+
+import { userType } from '../../types';
 
 const ProfileImage = styled.img`
   width: 40px;
@@ -26,15 +27,16 @@ const Name = styled.span`
   }
 `;
 
-export default function UserBadge({ userDetails }) {
+export default function UserBadge({ user }) {
+  const { details } = user;
   return (
     <Container>
       <ProfileImage
-        alt={userDetails.displayName}
-        src={userDetails.photoURL}
+        alt={details.displayName}
+        src={details.photoURL}
       />
       <Name>
-        {userDetails.displayName}
+        {details.displayName}
       </Name>
       <FontAwesomeIcon icon="caret-down" />
     </Container>
@@ -42,5 +44,5 @@ export default function UserBadge({ userDetails }) {
 }
 
 UserBadge.propTypes = {
-  userDetails: PropTypes.shape({}).isRequired,
+  user: userType.isRequired,
 };

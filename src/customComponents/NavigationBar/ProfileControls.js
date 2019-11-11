@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
+
+import { userType } from '../../types';
 import InteractiveButton from './InteractiveButton';
 import UserBadge from './UserBadge';
 
@@ -44,13 +46,13 @@ export default class ProfileControls extends Component {
 
   render() {
     const { showMenu } = this.state;
-    const { userDetails, signOut } = this.props;
+    const { user, signOut } = this.props;
     return (
       <Container
         onMouseEnter={() => this.setState({ showMenu: true })}
         onMouseLeave={() => this.setState({ showMenu: false })}
       >
-        <UserBadge userDetails={userDetails} />
+        <UserBadge user={user} />
         { showMenu
           ? (
             <Menu>
@@ -71,6 +73,6 @@ export default class ProfileControls extends Component {
 
 
 ProfileControls.propTypes = {
-  userDetails: PropTypes.shape({}).isRequired,
+  user: userType.isRequired,
   signOut: PropTypes.func.isRequired,
 };

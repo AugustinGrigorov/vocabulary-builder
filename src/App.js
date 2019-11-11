@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  signIn as signInAction,
-  signOut as signOutAction,
   listenForAuthChanges as listenForAuthChangesAction,
 } from './actions';
 import NavigationBar from './customComponents/NavigationBar';
@@ -13,28 +11,41 @@ import Inspect from './views/Inspect';
 import Learn from './views/Learn';
 import Practice from './views/Practice';
 import { Error, Loading } from './views/genericViews';
-import { userType } from './types';
+import { userType, dictionaryType } from './types';
 
 
 const PrivateRoute = ({
   component: View,
   user,
   dictionary,
-  signIn,
-  ...rest
+  exact,
+  path,
 }) => (
   <Route
-    {...rest}
+    exact={exact}
+    path={path}
     render={
-      (props) => {
+      () => {
         if (user.fetching) return <Loading />;
         if (!user.details) return <Error message="Not logged in." />;
         if (dictionary.error) return <Error message="Fetching dictionary failed." />;
-        return <View {...props} />;
+        return <View user={user} dictionary={dictionary} />;
       }
     }
   />
 );
+
+PrivateRoute.propTypes = {
+  component: PropTypes.func.isRequired,
+  user: userType.isRequired,
+  dictionary: dictionaryType.isRequired,
+  path: PropTypes.string.isRequired,
+  exact: PropTypes.bool,
+};
+
+PrivateRoute.defaultProps = {
+  exact: false,
+};
 
 class App extends Component {
   constructor(props) {
@@ -44,7 +55,7 @@ class App extends Component {
   }
 
   render() {
-    const { user, signIn, dictionary } = this.props;
+    const { user, dictionary } = this.props;
     return (
       <div className="App">
         <Router>
@@ -54,7 +65,6 @@ class App extends Component {
             <PrivateRoute
               user={user}
               dictionary={dictionary}
-              signIn={signIn}
               exact
               path="/inspect"
               component={Inspect}
@@ -62,7 +72,6 @@ class App extends Component {
             <PrivateRoute
               user={user}
               dictionary={dictionary}
-              signIn={signIn}
               exact
               path="/learn"
               component={Learn}
@@ -70,7 +79,6 @@ class App extends Component {
             <PrivateRoute
               user={user}
               dictionary={dictionary}
-              signIn={signIn}
               exact
               path="/practice"
               component={Practice}
@@ -93,7 +101,6 @@ App.propTypes = {
     error: PropTypes.bool,
   }).isRequired,
   listenForAuthChanges: PropTypes.func.isRequired,
-  signIn: PropTypes.func.isRequired,
   user: userType,
 };
 
@@ -103,8 +110,6 @@ App.defaultProps = {
 
 const mapDispatchToProps = (dispatch) => ({
   listenForAuthChanges: () => dispatch(listenForAuthChangesAction()),
-  signIn: () => dispatch(signInAction()),
-  signOut: () => dispatch(signOutAction()),
 });
 
 const mapStateToProps = (state) => ({

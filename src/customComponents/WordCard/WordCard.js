@@ -82,12 +82,13 @@ const Example = styled.p`
 `;
 
 function WordCard({
+  key,
   user,
   entry,
   removeWord,
   startEdit,
   editedEntryId,
-  ...props
+  queued,
 }) {
   const {
     id,
@@ -99,7 +100,8 @@ function WordCard({
 
   return (
     <Card
-      {...props}
+      key={key}
+      queued={queued}
       theme={isBeingEdited ? null : themes[theme]}
       front={
         (
@@ -174,10 +176,14 @@ WordCard.propTypes = {
   removeWord: PropTypes.func.isRequired,
   startEdit: PropTypes.func.isRequired,
   editedEntryId: PropTypes.string,
+  key: PropTypes.string,
+  queued: PropTypes.bool,
 };
 
 WordCard.defaultProps = {
   editedEntryId: null,
+  key: null,
+  queued: false,
 };
 
 const mapStateToProps = (state) => ({
