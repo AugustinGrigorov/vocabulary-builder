@@ -97,12 +97,14 @@ function WordCard({
   } = entry;
 
   const isBeingEdited = editedEntryId === id;
+  let itemTheme;
+  if (!isBeingEdited) itemTheme = themes[theme];
 
   return (
     <Card
       key={key}
       queued={queued}
-      theme={isBeingEdited ? null : themes[theme]}
+      theme={itemTheme}
       front={
         (
           <h2 className="Word">{word}</h2>
