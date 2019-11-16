@@ -49,31 +49,26 @@ function dequeueCompleted(dictionary) {
 
 export function fetchDictionaryForUser(userId) {
   return (dispatch) => {
-    const userRef = db.collection('users').doc(userId);
-    userRef.get()
-      .then((doc) => {
-        if (doc.exists) {
-          const dictionary = doc.data().words;
-          dispatch(receiveDictionary(dictionary));
-          dispatch(dequeueCompleted(dictionary));
-        } else {
-          userRef.set({ words: [] });
-          dispatch(receiveDictionary([]));
+    const wordsCollectionSnapshot = db.collection('users').doc(userId).collection('words').get();
+    wordsCollectionSnapshot.then((collection) => {
+      const dictionary = collection.docs.map((entry) => (
+        {
+          id: entry.id,
+          ...entry.data(),
         }
-      });
+      ));
+      dispatch(receiveDictionary(dictionary));
+      dispatch(dequeueCompleted(dictionary));
+    });
   };
 }
 
 export function addEntry({ entryData, userId }) {
   return (dispatch) => {
-    const entry = {
-      id: nanoid(),
-      ...entryData,
-    };
-    dispatch(queueEntryForAddition(entry));
-    db.collection('users').doc(userId).update({
-      words: firestore.FieldValue.arrayUnion(entry),
-    }).then(() => dispatch(fetchDictionaryForUser(userId)));
+    const entryId = nanoid();
+    dispatch(queueEntryForAddition({ id: entryId, ...entryData }));
+    const entryRef = db.collection('users').doc(userId).collection('words').doc(entryId);
+    entryRef.set(entryData).then(() => dispatch(fetchDictionaryForUser(userId)));
   };
 }
 
@@ -93,38 +88,25 @@ export function finishEdit() {
 
 export function editEntry({
   oldEntry,
-  entryId,
-  entryData,
+  newEntry,
   userId,
 }) {
   return async (dispatch) => {
-    const entry = {
-      id: entryId,
-      ...entryData,
-    };
-
     dispatch(finishEdit());
     dispatch(removeEntry(oldEntry));
-    dispatch(queueEntryForAddition(entry));
-
-    await db.collection('users').doc(userId).update({
-      words: firestore.FieldValue.arrayRemove(oldEntry),
-    });
-
-    await db.collection('users').doc(userId).update({
-      words: firestore.FieldValue.arrayUnion(entry),
-    });
-
-    dispatch(fetchDictionaryForUser(userId));
+    dispatch(queueEntryForAddition(newEntry));
+    const updateData = { ...newEntry };
+    delete updateData.id;
+    const entryRef = db.collection('users').doc(userId).collection('words').doc(oldEntry.id);
+    entryRef.update(updateData).then(() => dispatch(fetchDictionaryForUser(userId)));
   };
 }
 
 export function removeWord({ entry, userId }) {
   return (dispatch) => {
     dispatch(queueEntryForDeletion(entry));
-    db.collection('users').doc(userId).update({
-      words: firestore.FieldValue.arrayRemove(entry),
-    }).then(() => dispatch(fetchDictionaryForUser(userId)));
+    const entryRef = db.collection('users').doc(userId).collection('words').doc(entry.id);
+    entryRef.delete().then(() => dispatch(fetchDictionaryForUser(userId)));
   };
 }
 
@@ -212,5 +194,17 @@ export function updateScore({ attempted, correct }) {
     type: 'UPDATE_SCORE',
     attempted,
     correct,
+  };
+}
+
+export function recordAttempt({ userId, entryId, correct }) {
+  return () => {
+    const entryRef = db.collection('users').doc(userId).collection('words').doc(entryId);
+    entryRef.update({
+      attempts: firestore.FieldValue.arrayUnion({
+        correct,
+        timestamp: new Date(),
+      }),
+    });
   };
 }

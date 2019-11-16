@@ -163,7 +163,7 @@ class WordForm extends Component {
     if (!invalidInputFields.length) {
       this.setState(initialState);
       if (entry) {
-        editEntry({ oldEntry: entry, entryData, userId: user.details.uid });
+        editEntry({ oldEntry: entry, newEntry: entryData, userId: user.details.uid });
       } else {
         addEntry({ entryData, userId: user.details.uid });
       }

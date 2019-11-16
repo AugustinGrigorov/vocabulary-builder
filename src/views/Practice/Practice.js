@@ -6,8 +6,9 @@ import {
   nextWordFrom as nextWordFromAction,
   startPractice as startPracticeAction,
   updateScore as updateScoreAction,
+  recordAttempt as recordAttemptAction,
 } from '../../actions';
-import { dictionaryType, entryType } from '../../types';
+import { dictionaryType, entryType, userType } from '../../types';
 import { Error, Loading } from '../genericViews';
 import Result from './Result';
 
@@ -135,8 +136,9 @@ class Practice extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const { submission } = this.state;
-    const { currentEntry } = this.props;
+    const { currentEntry, recordAttempt, user } = this.props;
     const correctness = submission === currentEntry.definition;
+    recordAttempt(user.details.uid, currentEntry.id, correctness);
     this.setState({ grade: correctness ? 'correct' : 'incorrect' });
   }
 
@@ -230,6 +232,8 @@ Practice.propTypes = {
   attempted: PropTypes.number.isRequired,
   correct: PropTypes.number.isRequired,
   updateScore: PropTypes.func.isRequired,
+  user: userType.isRequired,
+  recordAttempt: PropTypes.func.isRequired,
 };
 
 Practice.defaultProps = {
@@ -252,6 +256,7 @@ const mapStateToProps = (state) => ({
   dictionary: state.dictionary,
   attempted: state.practice.attempted,
   correct: state.practice.correct,
+  user: state.user,
 });
 
 
@@ -259,6 +264,11 @@ const mapDispatchToProps = (dispatch) => ({
   startPractice: () => dispatch(startPracticeAction()),
   nextWordFrom: (dictionary) => dispatch(nextWordFromAction(dictionary)),
   updateScore: (attempted, correct) => dispatch(updateScoreAction({ attempted, correct })),
+  recordAttempt: (
+    userId,
+    entryId,
+    correct,
+  ) => dispatch(recordAttemptAction({ userId, entryId, correct })),
 });
 
 export default connect(
