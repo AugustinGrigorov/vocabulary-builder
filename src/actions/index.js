@@ -9,40 +9,43 @@ import {
   initiateSignOut,
   authChangeListener,
 } from '../utils/firebase';
+import {
+  actions,
+} from '../constants';
 
 const db = firestore();
 
 function receiveDictionary(dictionary) {
   return {
-    type: 'RECEIVE_DICTIONARY',
+    type: actions.RECEIVE_DICTIONARY,
     dictionary,
   };
 }
 
 function queueEntryForAddition(entry) {
   return {
-    type: 'QUEUE_ENTRY_FOR_ADDITION',
+    type: actions.QUEUE_ENTRY_FOR_ADDITION,
     entry,
   };
 }
 
 function queueEntryForDeletion(entry) {
   return {
-    type: 'QUEUE_ENTRY_FOR_DELETION',
+    type: actions.QUEUE_ENTRY_FOR_DELETION,
     entry,
   };
 }
 
 function removeEntry(entry) {
   return {
-    type: 'REMOVE_ENTRY',
+    type: actions.REMOVE_ENTRY,
     entry,
   };
 }
 
 function dequeueCompleted(dictionary) {
   return {
-    type: 'DEQUEUE_COMPLETED',
+    type: actions.DEQUEUE_COMPLETED,
     dictionary,
   };
 }
@@ -74,14 +77,14 @@ export function addEntry({ entryData, userId }) {
 
 export function startEdit(entryId) {
   return {
-    type: 'START_EDIT',
+    type: actions.START_EDIT,
     entryId,
   };
 }
 
 export function finishEdit() {
   return {
-    type: 'FINISH_EDIT',
+    type: actions.FINISH_EDIT,
   };
 }
 
@@ -112,20 +115,20 @@ export function removeWord({ entry, userId }) {
 
 function requestUserDetails() {
   return {
-    type: 'FETCH_USER_DETAILS_REQUEST',
+    type: actions.FETCH_USER_DETAILS_REQUEST,
   };
 }
 
 function receiveUserDetails(userDetails) {
   return {
-    type: 'RECEIVE_USER_DETAILS',
+    type: actions.RECEIVE_USER_DETAILS,
     userDetails,
   };
 }
 
 function userDetailsRequestFailed() {
   return {
-    type: 'USER_DETAILS_REQUEST_FAILED',
+    type: actions.USER_DETAILS_REQUEST_FAILED,
   };
 }
 
@@ -158,14 +161,14 @@ export function listenForAuthChanges() {
 
 function setPracticeQueue(queue) {
   return {
-    type: 'SET_QUIZ_QUEUE',
+    type: actions.SET_QUIZ_QUEUE,
     queue,
   };
 }
 
 function setCurrentPracticeEntry(entry) {
   return {
-    type: 'SET_CURRENT_QUIZ_ENTRY',
+    type: actions.SET_CURRENT_QUIZ_ENTRY,
     entry,
   };
 }
@@ -185,13 +188,13 @@ export function nextWordFrom(currentEntries) {
 
 export function startPractice() {
   return {
-    type: 'START_QUIZ',
+    type: actions.START_QUIZ,
   };
 }
 
 export function updateScore({ attempted, correct }) {
   return {
-    type: 'UPDATE_SCORE',
+    type: actions.UPDATE_SCORE,
     attempted,
     correct,
   };

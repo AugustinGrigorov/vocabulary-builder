@@ -1,26 +1,30 @@
+import {
+  actions,
+} from '../constants';
+
 const practice = (state = {
   wordQueue: [],
   attempted: 0,
   correct: 0,
 }, action) => {
   switch (action.type) {
-    case 'START_QUIZ':
+    case actions.START_QUIZ:
       return {
         ...state,
         attempted: 0,
         correct: 0,
       };
-    case 'SET_QUIZ_QUEUE':
+    case actions.SET_QUIZ_QUEUE:
       return {
         ...state,
         wordQueue: action.queue,
       };
-    case 'SET_CURRENT_QUIZ_ENTRY':
+    case actions.SET_CURRENT_QUIZ_ENTRY:
       return {
         ...state,
         currentEntry: action.entry,
       };
-    case 'UPDATE_SCORE':
+    case actions.UPDATE_SCORE:
       return {
         ...state,
         attempted: action.attempted,

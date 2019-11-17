@@ -1,20 +1,24 @@
+import {
+  actions,
+} from '../constants';
+
 const learn = (state = {
   editedEntryId: null,
   entryAdditionQueue: [],
   entryDeletionQueueIds: [],
 }, action) => {
   switch (action.type) {
-    case 'QUEUE_ENTRY_FOR_ADDITION':
+    case actions.QUEUE_ENTRY_FOR_ADDITION:
       return {
         ...state,
         entryAdditionQueue: [...state.entryAdditionQueue, action.entry],
       };
-    case 'QUEUE_ENTRY_FOR_DELETION':
+    case actions.QUEUE_ENTRY_FOR_DELETION:
       return {
         ...state,
         entryDeletionQueueIds: [...state.entryDeletionQueueIds, action.entry.id],
       };
-    case 'DEQUEUE_COMPLETED':
+    case actions.DEQUEUE_COMPLETED:
       return {
         entryAdditionQueue: state.entryAdditionQueue.filter(
           (entry) => !action.dictionary.some(
@@ -27,12 +31,12 @@ const learn = (state = {
           ),
         ),
       };
-    case 'START_EDIT':
+    case actions.START_EDIT:
       return {
         ...state,
         editedEntryId: action.entryId,
       };
-    case 'FINISH_EDIT':
+    case actions.FINISH_EDIT:
       return {
         ...state,
         editedEntryId: null,
