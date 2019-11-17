@@ -171,7 +171,7 @@ class Practice extends Component {
   }
 
   render() {
-    const { grade, submission } = this.state;
+    const { grade, submission, hasUsedHint } = this.state;
     const {
       currentEntry,
       dictionary,
@@ -199,8 +199,11 @@ class Practice extends Component {
                 onChange={this.handleChange}
                 value={submission}
               />
-              <SubmitButton type="submit" value="Submit" />
+              {!(hasUsedHint || grade === 'correct') ? (
+                <SubmitButton type="submit" value="Submit" />
+              ) : null}
               <NextStep
+                hasUsedHint={hasUsedHint}
                 grade={grade}
                 loadNextWord={this.loadNextWord}
                 revealWord={this.revealWord}
@@ -212,15 +215,19 @@ class Practice extends Component {
   }
 }
 
-function NextStep({ grade, loadNextWord, revealWord }) {
-  switch (grade) {
-    case 'correct':
-      return <NextButton type="button" onClick={loadNextWord}>Next word</NextButton>;
-    case 'incorrect':
-      return <RevealButton type="button" onClick={revealWord}>Reveal</RevealButton>;
-    default:
-      return null;
+function NextStep({
+  grade,
+  loadNextWord,
+  revealWord,
+  hasUsedHint,
+}) {
+  if (grade === 'correct' || hasUsedHint) {
+    return <NextButton type="button" onClick={loadNextWord}>Next word</NextButton>;
   }
+  if (grade === 'incorrect') {
+    return <RevealButton type="button" onClick={revealWord}>Reveal</RevealButton>;
+  }
+  return null;
 }
 
 Practice.propTypes = {
@@ -244,6 +251,7 @@ NextStep.propTypes = {
   grade: PropTypes.string,
   loadNextWord: PropTypes.func.isRequired,
   revealWord: PropTypes.func.isRequired,
+  hasUsedHint: PropTypes.bool.isRequired,
 };
 
 NextStep.defaultProps = {
