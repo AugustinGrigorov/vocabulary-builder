@@ -21,10 +21,10 @@ export function calculateStrength({ // eslint-disable-line import/prefer-default
     }
     return totalCorrectAttempts;
   }, 0);
-  const attemtQualityCoefficient = correctAttempts / totalAttempts;
+  const attemtQualityCoefficient = correctAttempts / totalAttempts || 0;
 
   const optimalAmountOfAttempts = 6;
-  const attemptQuantityCoefficient = totalAttempts / optimalAmountOfAttempts;
+  const attemptQuantityCoefficient = totalAttempts / optimalAmountOfAttempts || 0;
 
   return attemtQualityCoefficient * attemptQuantityCoefficient;
 }

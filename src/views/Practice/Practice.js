@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components/macro';
+
 import {
   nextWordFrom as nextWordFromAction,
   startPractice as startPracticeAction,
@@ -9,6 +10,8 @@ import {
   recordAttempt as recordAttemptAction,
 } from '../../actions';
 import { dictionaryType, entryType, userType } from '../../types';
+import { calculateStrength } from '../../utils/entity_utils';
+
 import { Error, Loading } from '../genericViews';
 import Result from './Result';
 
@@ -106,6 +109,19 @@ const Answer = styled.input`
   }}
 `;
 
+const amountOfWordsForQuiz = 10;
+
+function getWeakestWords(dictionaryData, amount) {
+  const dictinaryWithWordStrengths = dictionaryData.map((entry) => ({
+    ...entry,
+    strength: calculateStrength(entry),
+  }));
+  dictinaryWithWordStrengths.sort((entry1, entry2) => (
+    entry1.strength - entry2.strength
+  ));
+  return dictinaryWithWordStrengths.slice(0, amount);
+}
+
 class Practice extends Component {
   constructor(props) {
     super(props);
@@ -115,21 +131,25 @@ class Practice extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.loadNextWord = this.loadNextWord.bind(this);
     this.revealWord = this.revealWord.bind(this);
+  }
 
+  componentDidMount() {
     const {
       startPractice,
       nextWordFrom,
       dictionary,
     } = this.props;
 
+    const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
+    if (dictionary.data.length) nextWordFrom(wordsForQuiz);
     startPractice();
-    if (dictionary.data.length) nextWordFrom(dictionary.data);
   }
 
   componentDidUpdate(prevProps) {
     const { nextWordFrom, dictionary } = this.props;
     if (dictionary !== prevProps.dictionary && dictionary.initialized && dictionary.data.length) {
-      nextWordFrom(dictionary.data);
+      const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
+      nextWordFrom(wordsForQuiz);
     }
   }
 
