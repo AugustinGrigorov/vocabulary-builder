@@ -111,7 +111,6 @@ const mapStateToProps = (state) => ({
   dictionary: state.dictionary,
   entryAdditionQueue: state.learn.entryAdditionQueue,
   entryDeletionQueueIds: state.learn.entryDeletionQueueIds,
-  user: state.user,
 });
 
 export default connect(
