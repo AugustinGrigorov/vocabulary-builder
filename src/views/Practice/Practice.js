@@ -124,7 +124,7 @@ function getWeakestWords(dictionaryData, amount) {
 
 function isCorrect(entry, definition) {
   const lowercaseDefinition = definition.toLowerCase();
-  const definitionComponents = lowercaseDefinition.split(/,\s/g);
+  const definitionComponents = lowercaseDefinition.split(/,\s|,/g);
   return definitionComponents.some((component) => (
     component === entry.toLowerCase()
   ));
