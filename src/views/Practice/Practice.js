@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components/macro';
 
 import {
-  nextWordFrom as nextWordFromAction,
+  nextWord as nextWordAction,
   startPractice as startPracticeAction,
   updateScore as updateScoreAction,
   recordAttempt as recordAttemptAction,
@@ -136,20 +136,22 @@ class Practice extends Component {
   componentDidMount() {
     const {
       startPractice,
-      nextWordFrom,
       dictionary,
     } = this.props;
 
     const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
-    if (dictionary.data.length) nextWordFrom(wordsForQuiz);
-    startPractice();
+    if (dictionary.data.length) startPractice(wordsForQuiz);
   }
 
   componentDidUpdate(prevProps) {
-    const { nextWordFrom, dictionary } = this.props;
-    if (dictionary !== prevProps.dictionary && dictionary.initialized && dictionary.data.length) {
+    const {
+      startPractice,
+      dictionary,
+    } = this.props;
+
+    if (!prevProps.dictionary.data.length && dictionary.initialized && dictionary.data.length) {
       const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
-      nextWordFrom(wordsForQuiz);
+      startPractice(wordsForQuiz);
     }
   }
 
@@ -169,8 +171,7 @@ class Practice extends Component {
 
   loadNextWord() {
     const {
-      nextWordFrom,
-      wordQueue,
+      nextWord,
       attempted,
       correct,
       updateScore,
@@ -181,7 +182,7 @@ class Practice extends Component {
     const newScore = hasUsedHint ? correct : correct + 1;
 
     updateScore(attempted + 1, newScore);
-    nextWordFrom(wordQueue);
+    nextWord();
     this.setState(initialState);
   }
 
@@ -242,7 +243,7 @@ function NextStep({
   hasUsedHint,
 }) {
   if (grade === 'correct' || hasUsedHint) {
-    return <NextButton type="button" onClick={loadNextWord}>Next word</NextButton>;
+    return <NextButton type="submit" onClick={loadNextWord}>Next word</NextButton>;
   }
   if (grade === 'incorrect') {
     return <RevealButton type="button" onClick={revealWord}>Reveal</RevealButton>;
@@ -252,9 +253,8 @@ function NextStep({
 
 Practice.propTypes = {
   dictionary: dictionaryType.isRequired,
-  wordQueue: PropTypes.arrayOf(entryType).isRequired,
   currentEntry: entryType,
-  nextWordFrom: PropTypes.func.isRequired,
+  nextWord: PropTypes.func.isRequired,
   startPractice: PropTypes.func.isRequired,
   attempted: PropTypes.number.isRequired,
   correct: PropTypes.number.isRequired,
@@ -279,8 +279,7 @@ NextStep.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  currentEntry: state.practice.currentEntry,
-  wordQueue: state.practice.wordQueue,
+  currentEntry: state.practice.wordQueue[state.practice.currentEntryIndex],
   dictionary: state.dictionary,
   attempted: state.practice.attempted,
   correct: state.practice.correct,
@@ -289,8 +288,8 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = (dispatch) => ({
-  startPractice: () => dispatch(startPracticeAction()),
-  nextWordFrom: (dictionary) => dispatch(nextWordFromAction(dictionary)),
+  startPractice: (wordQueue) => dispatch(startPracticeAction(wordQueue)),
+  nextWord: () => dispatch(nextWordAction()),
   updateScore: (attempted, correct) => dispatch(updateScoreAction({ attempted, correct })),
   recordAttempt: (
     userId,
