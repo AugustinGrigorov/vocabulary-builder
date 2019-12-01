@@ -44,6 +44,7 @@ const columns = [{
   Header: 'Strength',
   id: 'strength',
   accessor: (row) => <Indicator strength={calculateStrength(row)} />,
+  sortMethod: (a, b) => a.props.strength - b.props.strength,
 }];
 
 function Inspect({ dictionary }) {
