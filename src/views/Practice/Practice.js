@@ -112,14 +112,21 @@ const Answer = styled.input`
 const amountOfWordsForQuiz = 10;
 
 function getWeakestWords(dictionaryData, amount) {
-  const dictinaryWithWordStrengths = dictionaryData.map((entry) => ({
-    ...entry,
-    strength: calculateStrength(entry),
-  }));
-  dictinaryWithWordStrengths.sort((entry1, entry2) => (
-    entry1.strength - entry2.strength
-  ));
-  return dictinaryWithWordStrengths.slice(0, amount);
+  const allocationArray = [];
+  const wordsForQuiz = [];
+  dictionaryData.forEach((entry) => {
+    const allocatationRatio = 1 / calculateStrength(entry);
+    const allocations = Math.ceil(allocatationRatio * 100);
+    for (let i = 0; i < allocations; i += 1) {
+      allocationArray.push(entry);
+    }
+  });
+
+  for (let i = 0; i < amount; i += 1) {
+    wordsForQuiz.push(allocationArray[Math.floor(Math.random() * allocationArray.length)]);
+  }
+
+  return wordsForQuiz;
 }
 
 class Practice extends Component {

@@ -11,13 +11,13 @@ import 'react-table/react-table.css';
 
 const Indicator = styled.div`
   background: ${({ strength }) => {
-    if (strength > 0.75) {
+    if (strength > 1.75) {
       return '#30bd17';
     }
-    if (strength > 0.5) {
+    if (strength > 1.5) {
       return '#e0d607';
     }
-    if (strength > 0.25) {
+    if (strength > 1.25) {
       return '#c96710';
     }
     return '#9c1111';
