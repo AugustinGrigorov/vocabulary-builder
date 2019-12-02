@@ -129,6 +129,14 @@ function getWeakestWords(dictionaryData, amount) {
   return wordsForQuiz;
 }
 
+function isCorrect(entry, definition) {
+  const lowercaseDefinition = definition.toLowerCase();
+  const definitionComponents = lowercaseDefinition.split(/,\s|,/g);
+  return definitionComponents.some((component) => (
+    component === entry.toLowerCase()
+  ));
+}
+
 class Practice extends Component {
   constructor(props) {
     super(props);
@@ -166,7 +174,7 @@ class Practice extends Component {
     e.preventDefault();
     const { submission } = this.state;
     const { currentEntry, recordAttempt, user } = this.props;
-    const correctness = submission === currentEntry.definition;
+    const correctness = isCorrect(submission, currentEntry.definition);
     recordAttempt(user.details.uid, currentEntry.id, correctness);
     this.setState({ grade: correctness ? 'correct' : 'incorrect' });
   }
