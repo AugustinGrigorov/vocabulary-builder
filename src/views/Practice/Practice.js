@@ -114,8 +114,11 @@ const amountOfWordsForQuiz = 10;
 function getWeakestWords(dictionaryData, amount) {
   const allocationArray = [];
   const wordsForQuiz = [];
+  const newWords = [];
   dictionaryData.forEach((entry) => {
-    const allocatationRatio = 1 / calculateStrength(entry);
+    const wordStrength = calculateStrength(entry);
+    if (wordStrength === 1) newWords.push(entry);
+    const allocatationRatio = 1 / wordStrength;
     const allocations = Math.ceil(allocatationRatio * 100);
     for (let i = 0; i < allocations; i += 1) {
       allocationArray.push(entry);
@@ -123,7 +126,11 @@ function getWeakestWords(dictionaryData, amount) {
   });
 
   for (let i = 0; i < amount; i += 1) {
-    wordsForQuiz.push(allocationArray[Math.floor(Math.random() * allocationArray.length)]);
+    if (i < newWords.length) {
+      wordsForQuiz.push(newWords[i]);
+    } else {
+      wordsForQuiz.push(allocationArray[Math.floor(Math.random() * allocationArray.length)]);
+    }
   }
 
   return wordsForQuiz;
