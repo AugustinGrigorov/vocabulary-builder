@@ -112,12 +112,13 @@ const Answer = styled.input`
 const amountOfWordsForQuiz = 10;
 
 function getWeakestWords(dictionaryData, amount) {
+  const wordsForQuiz = new Set();
   const allocationArray = [];
-  const wordsForQuiz = [];
-  const newWords = [];
+  const newEntries = [];
+
   dictionaryData.forEach((entry) => {
     const wordStrength = calculateStrength(entry);
-    if (wordStrength === 1) newWords.push(entry);
+    if (wordStrength === 1) newEntries.push(entry);
     const allocatationRatio = 1 / wordStrength;
     const allocations = Math.ceil(allocatationRatio * 100);
     for (let i = 0; i < allocations; i += 1) {
@@ -125,15 +126,15 @@ function getWeakestWords(dictionaryData, amount) {
     }
   });
 
-  for (let i = 0; i < amount; i += 1) {
-    if (i < newWords.length) {
-      wordsForQuiz.push(newWords[i]);
-    } else {
-      wordsForQuiz.push(allocationArray[Math.floor(Math.random() * allocationArray.length)]);
-    }
+  newEntries.slice(0, amount).forEach((entry) => {
+    wordsForQuiz.add(entry);
+  });
+
+  while (wordsForQuiz.size < dictionaryData.length && wordsForQuiz.size < amount) {
+    wordsForQuiz.add(allocationArray[Math.floor(Math.random() * allocationArray.length)]);
   }
 
-  return wordsForQuiz;
+  return Array.from(wordsForQuiz);
 }
 
 function isCorrect(entry, definition) {
