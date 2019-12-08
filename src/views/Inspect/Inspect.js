@@ -5,7 +5,6 @@ import styled from 'styled-components/macro';
 
 
 import { dictionaryType } from '../../types';
-import { calculateStrength } from '../../utils/entity_utils';
 
 import 'react-table/react-table.css';
 
@@ -43,7 +42,7 @@ const columns = [{
 }, {
   Header: 'Strength',
   id: 'strength',
-  accessor: (row) => <Indicator strength={calculateStrength(row)} />,
+  accessor: (row) => <Indicator strength={row.strength} />,
   sortMethod: (a, b) => a.props.strength - b.props.strength,
 }];
 

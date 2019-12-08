@@ -2,6 +2,8 @@ import {
   actions,
 } from '../constants';
 
+import { calculateStrength } from '../utils/entity_utils';
+
 const dictionary = (state = {
   initialized: false,
   data: [],
@@ -14,7 +16,12 @@ const dictionary = (state = {
     case actions.RECEIVE_DICTIONARY:
       return {
         ...state,
-        data: action.dictionary,
+        data: action.dictionary
+          .map((entry) => ({
+            createdAt: { seconds: 0 },
+            ...entry,
+            strength: calculateStrength(entry),
+          })).sort((a, b) => a.strength - b.strength || b.createdAt.seconds - a.createdAt.seconds),
         initialized: true,
       };
     case actions.REMOVE_ENTRY:

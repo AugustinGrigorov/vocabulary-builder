@@ -69,9 +69,16 @@ export function fetchDictionaryForUser(userId) {
 export function addEntry({ entryData, userId }) {
   return (dispatch) => {
     const entryId = nanoid();
-    dispatch(queueEntryForAddition({ id: entryId, ...entryData }));
+    dispatch(queueEntryForAddition({
+      id: entryId,
+      ...entryData,
+      strength: 0,
+    }));
     const entryRef = db.collection('users').doc(userId).collection('words').doc(entryId);
-    entryRef.set(entryData).then(() => dispatch(fetchDictionaryForUser(userId)));
+    entryRef.set({
+      ...entryData,
+      createdAt: new Date(),
+    }).then(() => dispatch(fetchDictionaryForUser(userId)));
   };
 }
 

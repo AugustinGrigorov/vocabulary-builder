@@ -10,7 +10,6 @@ import {
   recordAttempt as recordAttemptAction,
 } from '../../actions';
 import { dictionaryType, entryType, userType } from '../../types';
-import { calculateStrength } from '../../utils/entity_utils';
 
 import { Error, Loading } from '../genericViews';
 import Result from './Result';
@@ -116,9 +115,8 @@ function getWeakestWords(dictionaryData, amount) {
   const wordsForQuiz = [];
   const newWords = [];
   dictionaryData.forEach((entry) => {
-    const wordStrength = calculateStrength(entry);
-    if (wordStrength === 1) newWords.push(entry);
-    const allocatationRatio = 1 / wordStrength;
+    if (entry.strength === 1) newWords.push(entry);
+    const allocatationRatio = 1 / entry.strength;
     const allocations = Math.ceil(allocatationRatio * 100);
     for (let i = 0; i < allocations; i += 1) {
       allocationArray.push(entry);
