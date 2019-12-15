@@ -11,6 +11,7 @@ const dictionary = (state = {
   const dictionaryData = state.data;
   let entryToUpdate;
   let entryToUpdateIndex;
+  let attempts;
 
   switch (action.type) {
     case actions.RECEIVE_DICTIONARY:
@@ -37,21 +38,24 @@ const dictionary = (state = {
         }
       }
 
+      attempts = [
+        ...entryToUpdate.attempts || [],
+        {
+          correct: action.correct,
+          timestamp: {
+            seconds: Date.now() / 1000,
+          },
+        },
+      ];
+
       return {
         ...state,
         data: [
           ...dictionaryData.slice(0, entryToUpdateIndex),
           {
             ...entryToUpdate,
-            attempts: [
-              ...entryToUpdate.attempts || [],
-              {
-                correct: action.correct,
-                timestamp: {
-                  seconds: Date.now() / 1000,
-                },
-              },
-            ],
+            attempts,
+            strength: calculateStrength({ attempts }),
           },
           ...dictionaryData.slice(entryToUpdateIndex + 1),
         ],
