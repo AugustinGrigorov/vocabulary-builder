@@ -129,7 +129,14 @@ const initialState = {
 };
 
 function validateEntryData(entryData) {
-  return Object.keys(entryData).filter((field) => !entryData[field].length);
+  const mandatoryFields = [
+    'word',
+    'type',
+    'definition',
+    'example',
+  ];
+  return Object.keys(entryData).filter((field) => mandatoryFields.includes(field)
+    && !entryData[field].length);
 }
 
 class WordForm extends Component {
