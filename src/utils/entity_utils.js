@@ -26,5 +26,5 @@ export function calculateStrength({ // eslint-disable-line import/prefer-default
   const optimalAmountOfAttempts = 6;
   const attemptQuantityCoefficient = totalAttempts / optimalAmountOfAttempts || 0;
 
-  return attemtQualityCoefficient * attemptQuantityCoefficient;
+  return 1 + attemtQualityCoefficient * attemptQuantityCoefficient;
 }

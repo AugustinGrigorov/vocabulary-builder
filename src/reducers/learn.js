@@ -11,7 +11,7 @@ const learn = (state = {
     case actions.QUEUE_ENTRY_FOR_ADDITION:
       return {
         ...state,
-        entryAdditionQueue: [...state.entryAdditionQueue, action.entry],
+        entryAdditionQueue: [action.entry, ...state.entryAdditionQueue],
       };
     case actions.QUEUE_ENTRY_FOR_DELETION:
       return {

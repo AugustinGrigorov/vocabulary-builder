@@ -4,13 +4,12 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components/macro';
 
 import {
-  nextWordFrom as nextWordFromAction,
+  nextWord as nextWordAction,
   startPractice as startPracticeAction,
   updateScore as updateScoreAction,
   recordAttempt as recordAttemptAction,
 } from '../../actions';
 import { dictionaryType, entryType, userType } from '../../types';
-import { calculateStrength } from '../../utils/entity_utils';
 
 import { Error, Loading } from '../genericViews';
 import Result from './Result';
@@ -112,14 +111,36 @@ const Answer = styled.input`
 const amountOfWordsForQuiz = 10;
 
 function getWeakestWords(dictionaryData, amount) {
-  const dictinaryWithWordStrengths = dictionaryData.map((entry) => ({
-    ...entry,
-    strength: calculateStrength(entry),
-  }));
-  dictinaryWithWordStrengths.sort((entry1, entry2) => (
-    entry1.strength - entry2.strength
+  const wordsForQuiz = new Set();
+  const allocationArray = [];
+  const newEntries = [];
+
+  dictionaryData.forEach((entry) => {
+    if (entry.strength === 1) newEntries.push(entry);
+    const allocatationRatio = 1 / entry.strength;
+    const allocations = Math.ceil(allocatationRatio * 100);
+    for (let i = 0; i < allocations; i += 1) {
+      allocationArray.push(entry);
+    }
+  });
+
+  newEntries.slice(0, amount).forEach((entry) => {
+    wordsForQuiz.add(entry);
+  });
+
+  while (wordsForQuiz.size < dictionaryData.length && wordsForQuiz.size < amount) {
+    wordsForQuiz.add(allocationArray[Math.floor(Math.random() * allocationArray.length)]);
+  }
+
+  return Array.from(wordsForQuiz);
+}
+
+function isCorrect(entry, definition) {
+  const lowercaseDefinition = definition.toLowerCase();
+  const definitionComponents = lowercaseDefinition.split(/,\s|,/g);
+  return definitionComponents.some((component) => (
+    component === entry.toLowerCase()
   ));
-  return dictinaryWithWordStrengths.slice(0, amount);
 }
 
 function isCorrect(entry, definition) {
@@ -144,20 +165,22 @@ class Practice extends Component {
   componentDidMount() {
     const {
       startPractice,
-      nextWordFrom,
       dictionary,
     } = this.props;
 
     const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
-    if (dictionary.data.length) nextWordFrom(wordsForQuiz);
-    startPractice();
+    if (dictionary.data.length) startPractice(wordsForQuiz);
   }
 
   componentDidUpdate(prevProps) {
-    const { nextWordFrom, dictionary } = this.props;
-    if (dictionary !== prevProps.dictionary && dictionary.initialized && dictionary.data.length) {
+    const {
+      startPractice,
+      dictionary,
+    } = this.props;
+
+    if (!prevProps.dictionary.data.length && dictionary.initialized && dictionary.data.length) {
       const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
-      nextWordFrom(wordsForQuiz);
+      startPractice(wordsForQuiz);
     }
   }
 
@@ -177,8 +200,7 @@ class Practice extends Component {
 
   loadNextWord() {
     const {
-      nextWordFrom,
-      wordQueue,
+      nextWord,
       attempted,
       correct,
       updateScore,
@@ -189,7 +211,7 @@ class Practice extends Component {
     const newScore = hasUsedHint ? correct : correct + 1;
 
     updateScore(attempted + 1, newScore);
-    nextWordFrom(wordQueue);
+    nextWord();
     this.setState(initialState);
   }
 
@@ -250,7 +272,7 @@ function NextStep({
   hasUsedHint,
 }) {
   if (grade === 'correct' || hasUsedHint) {
-    return <NextButton type="button" onClick={loadNextWord}>Next word</NextButton>;
+    return <NextButton type="submit" onClick={loadNextWord}>Next word</NextButton>;
   }
   if (grade === 'incorrect') {
     return <RevealButton type="button" onClick={revealWord}>Reveal</RevealButton>;
@@ -260,9 +282,8 @@ function NextStep({
 
 Practice.propTypes = {
   dictionary: dictionaryType.isRequired,
-  wordQueue: PropTypes.arrayOf(entryType).isRequired,
   currentEntry: entryType,
-  nextWordFrom: PropTypes.func.isRequired,
+  nextWord: PropTypes.func.isRequired,
   startPractice: PropTypes.func.isRequired,
   attempted: PropTypes.number.isRequired,
   correct: PropTypes.number.isRequired,
@@ -287,8 +308,7 @@ NextStep.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  currentEntry: state.practice.currentEntry,
-  wordQueue: state.practice.wordQueue,
+  currentEntry: state.practice.wordQueue[state.practice.currentEntryIndex],
   dictionary: state.dictionary,
   attempted: state.practice.attempted,
   correct: state.practice.correct,
@@ -297,8 +317,8 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = (dispatch) => ({
-  startPractice: () => dispatch(startPracticeAction()),
-  nextWordFrom: (dictionary) => dispatch(nextWordFromAction(dictionary)),
+  startPractice: (wordQueue) => dispatch(startPracticeAction(wordQueue)),
+  nextWord: () => dispatch(nextWordAction()),
   updateScore: (attempted, correct) => dispatch(updateScoreAction({ attempted, correct })),
   recordAttempt: (
     userId,

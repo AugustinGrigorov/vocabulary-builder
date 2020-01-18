@@ -84,15 +84,15 @@ class Learn extends Component {
         </Search>
         <CardContainer>
           {!searchTerm.length ? <EditorCard /> : null}
+          {pendingEntries.map((entry) => (
+            <WordCard key={entry.id} entry={entry} queued />
+          ))}
           {committedEntires.map((entry) => (
             <WordCard
               key={entry.id}
               entry={entry}
               queued={entryDeletionQueueIds.includes(entry.id)}
             />
-          ))}
-          {pendingEntries.map((entry) => (
-            <WordCard key={entry.id} entry={entry} queued />
           ))}
         </CardContainer>
         {noResults ? <Message>No results</Message> : null}

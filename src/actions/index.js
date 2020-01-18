@@ -75,9 +75,16 @@ export function fetchDictionaryForUser(userId) {
 export function addEntry({ entryData, userId }) {
   return (dispatch) => {
     const entryId = nanoid();
-    dispatch(queueEntryForAddition({ id: entryId, ...entryData }));
+    dispatch(queueEntryForAddition({
+      id: entryId,
+      ...entryData,
+      strength: 0,
+    }));
     const entryRef = db.collection('users').doc(userId).collection('words').doc(entryId);
-    entryRef.set(entryData).then(() => dispatch(fetchDictionaryForUser(userId)));
+    entryRef.set({
+      ...entryData,
+      createdAt: new Date(),
+    }).then(() => dispatch(fetchDictionaryForUser(userId)));
   };
 }
 
@@ -165,36 +172,16 @@ export function listenForAuthChanges() {
   };
 }
 
-function setPracticeQueue(queue) {
+export function nextWord() {
   return {
-    type: actions.SET_QUIZ_QUEUE,
-    queue,
+    type: actions.NEXT_WORD,
   };
 }
 
-function setCurrentPracticeEntry(entry) {
-  return {
-    type: actions.SET_CURRENT_QUIZ_ENTRY,
-    entry,
-  };
-}
-
-export function nextWordFrom(currentEntries) {
-  return (dispatch) => {
-    const wordPosition = Math.floor(currentEntries.length * Math.random());
-    const selectedEntry = currentEntries[wordPosition];
-    const remainingEntries = [
-      ...currentEntries.slice(0, wordPosition),
-      ...currentEntries.slice(wordPosition + 1),
-    ];
-    dispatch(setPracticeQueue(remainingEntries));
-    dispatch(setCurrentPracticeEntry(selectedEntry));
-  };
-}
-
-export function startPractice() {
+export function startPractice(wordQueue) {
   return {
     type: actions.START_QUIZ,
+    wordQueue,
   };
 }
 
@@ -206,8 +193,17 @@ export function updateScore({ attempted, correct }) {
   };
 }
 
+function updateAttempts(entryId, correct) {
+  return {
+    type: actions.UPDATE_ATTEMPTS,
+    entryId,
+    correct,
+  };
+}
+
 export function recordAttempt({ userId, entryId, correct }) {
-  return () => {
+  return (dispatch) => {
+    dispatch(updateAttempts(entryId, correct));
     const entryRef = db.collection('users').doc(userId).collection('words').doc(entryId);
     entryRef.update({
       attempts: firestore.FieldValue.arrayUnion({

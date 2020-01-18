@@ -13,4 +13,6 @@ export const actions = { // eslint-disable-line import/prefer-default-export
   SET_CURRENT_QUIZ_ENTRY: 'SET_CURRENT_QUIZ_ENTRY',
   START_QUIZ: 'START_QUIZ',
   UPDATE_SCORE: 'UPDATE_SCORE',
+  UPDATE_ATTEMPTS: 'UPDATE_ATTEMPTS',
+  NEXT_WORD: 'NEXT_WORD',
 };
