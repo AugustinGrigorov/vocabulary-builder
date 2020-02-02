@@ -6,6 +6,7 @@ import {
   listenForAuthChanges as listenForAuthChangesAction,
 } from './actions';
 import NavigationBar from './customComponents/NavigationBar';
+import FeedbackWidget from './customComponents/FeedbackWidget';
 import Home from './views/Home';
 import Inspect from './views/Inspect';
 import Learn from './views/Learn';
@@ -83,6 +84,7 @@ class App extends Component {
               path="/practice"
               component={Practice}
             />
+            <Route path="*" component={FeedbackWidget} />
           </>
         </Router>
       </div>

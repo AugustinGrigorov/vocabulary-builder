@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components/macro';
+import styled from 'styled-components/macro';
+import { buttonBaseStyle } from '../../genericComponents/styles';
 
 import {
   nextWord as nextWordAction,
@@ -19,19 +20,6 @@ const initialState = {
   hasUsedHint: false,
   grade: null,
 };
-
-const buttonBaseStyle = css`
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 8px 16px;
-  border: none;
-  text-align: center;
-  border-radius: 18px;
-  text-transform: uppercase;
-  margin: 12px auto;
-  color: #FFF;
-`;
 
 const NextButton = styled.button`
   ${buttonBaseStyle}

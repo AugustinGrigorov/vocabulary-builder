@@ -13,6 +13,8 @@ import {
   faSearch,
   faPlusCircle,
   faPenSquare,
+  faTimesCircle,
+  faCommentAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 import rootReducer from './reducers';
@@ -29,6 +31,8 @@ library.add(
   faSearch,
   faPlusCircle,
   faPenSquare,
+  faTimesCircle,
+  faCommentAlt,
 );
 
 const reduxDevtoolsExtensionHook = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';
