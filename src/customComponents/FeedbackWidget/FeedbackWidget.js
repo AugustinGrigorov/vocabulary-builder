@@ -20,6 +20,8 @@ const Wrapper = styled.div`
   align-items: flex-end;
   bottom: 24px;
   right: 24px;
+  width: calc(100% - 48px);
+  max-width: 320px;
 `;
 
 const CloseIcon = styled(FontAwesomeIcon)`
@@ -39,13 +41,14 @@ const FeedbackForm = styled.form`
   padding: 8px;
   margin-bottom: 8px;
   border-radius: 4px;
+  width: 100%;
+  height: 100%;
 `;
 
 const FeedbackField = styled.textarea`
   resize: none;
   padding: 4px;
-  width: 300px;
-  height: 120px;
+  height: 80px;
   margin-bottom: 4px;
   font-size: 16px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
