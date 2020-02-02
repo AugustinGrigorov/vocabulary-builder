@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { buttonBaseStyle } from '../../genericComponents/styles';
 
+import { sumbitFeedback as sumbitFeedbackAction } from '../../actions';
+import { buttonBaseStyle } from '../../genericComponents/styles';
+import { userType } from '../../types';
+
+const initialState = {
+  isOpen: false,
+  feedback: '',
+};
 
 const Wrapper = styled.div`
   position: fixed;
@@ -34,10 +43,12 @@ const FeedbackForm = styled.form`
 
 const FeedbackField = styled.textarea`
   resize: none;
+  padding: 4px;
   width: 300px;
   height: 120px;
   margin-bottom: 4px;
   font-size: 16px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 `;
 
 const SubmitButton = styled.input`
@@ -61,10 +72,7 @@ const IconContainer = styled.div`
 class FeedbackWidget extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isOpen: false,
-      feedback: '',
-    };
+    this.state = initialState;
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -72,7 +80,12 @@ class FeedbackWidget extends Component {
 
   handleSubmit(e) {
     const { feedback } = this.state;
-    console.log(`Feedback submitted: ${feedback}`);
+    const { user, submitFeedback } = this.props;
+    submitFeedback({
+      email: (user && user.details && user.details.email) || 'anonnymous',
+      feedback,
+    });
+    this.setState(initialState);
     e.preventDefault();
   }
 
@@ -100,6 +113,7 @@ class FeedbackWidget extends Component {
                 name="feedback"
                 value={feedback}
                 onChange={this.handleChange}
+                placeholder="Type your feedback here and click sumbit."
               />
               <SubmitButton type="submit" value="Submit Feedback" />
             </FeedbackForm>
@@ -113,4 +127,24 @@ class FeedbackWidget extends Component {
   }
 }
 
-export default FeedbackWidget;
+FeedbackWidget.propTypes = {
+  user: userType,
+  submitFeedback: PropTypes.func.isRequired,
+};
+
+FeedbackWidget.defaultProps = {
+  user: null,
+};
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  submitFeedback: (data) => dispatch(sumbitFeedbackAction(data)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(FeedbackWidget);

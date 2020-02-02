@@ -207,3 +207,15 @@ export function recordAttempt({ userId, entryId, correct }) {
     });
   };
 }
+
+export function sumbitFeedback({ email, feedback }) {
+  return () => {
+    const feedbackId = nanoid();
+    const feedbackRef = db.collection('feedback').doc(feedbackId);
+    feedbackRef.set({
+      email,
+      feedback,
+      timestamp: new Date(),
+    });
+  };
+}
