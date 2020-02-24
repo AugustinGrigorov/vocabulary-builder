@@ -1,5 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components/macro';
+
+import { dictionaryType } from '../../types';
 
 const Container = styled.div`
   display: flex;
@@ -26,7 +29,7 @@ const Description = styled.p`
   font-size: 18px;
 `;
 
-function Home() {
+function Home({ dictionary }) {
   return (
     <Container>
       <Heading>Vocabulary builder</Heading>
@@ -36,9 +39,34 @@ function Home() {
         words you learn when studying a
         foreign language.
       </Description>
+      {dictionary.data.length ? (
+        <>
+          <p>
+            Words added:
+            {' '}
+            <b>{dictionary.data.length}</b>
+          </p>
+          <p>
+            Practice attempts:
+            {' '}
+            <b>
+              {dictionary.data.reduce((total, item) => total + item.attempts.length, 0)}
+            </b>
+          </p>
+        </>
+      ) : null}
     </Container>
   );
 }
 
+Home.propTypes = {
+  dictionary: dictionaryType.isRequired,
+};
 
-export default Home;
+const mapStateToProps = (state) => ({
+  dictionary: state.dictionary,
+});
+
+export default connect(
+  mapStateToProps,
+)(Home);

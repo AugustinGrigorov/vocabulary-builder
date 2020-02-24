@@ -14,7 +14,7 @@ import {
   faPlusCircle,
   faPenSquare,
   faTimesCircle,
-  faCommentAlt
+  faCommentAlt,
 } from '@fortawesome/free-solid-svg-icons';
 
 import rootReducer from './reducers';
