@@ -1,4 +1,9 @@
-import { initializeApp, auth, performance, analytics } from 'firebase/app';
+import {
+  initializeApp,
+  auth,
+  performance,
+  analytics,
+} from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/performance';
 import 'firebase/analytics';
