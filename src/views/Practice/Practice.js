@@ -96,33 +96,6 @@ const Answer = styled.input`
   }}
 `;
 
-const amountOfWordsForQuiz = 10;
-
-function getWeakestWords(dictionaryData, amount) {
-  const wordsForQuiz = new Set();
-  const allocationArray = [];
-  const newEntries = [];
-
-  dictionaryData.forEach((entry) => {
-    if (entry.strength === 1) newEntries.push(entry);
-    const allocatationRatio = 1 / entry.strength;
-    const allocations = Math.ceil(allocatationRatio * 100);
-    for (let i = 0; i < allocations; i += 1) {
-      allocationArray.push(entry);
-    }
-  });
-
-  newEntries.slice(0, amount).forEach((entry) => {
-    wordsForQuiz.add(entry);
-  });
-
-  while (wordsForQuiz.size < dictionaryData.length && wordsForQuiz.size < amount) {
-    wordsForQuiz.add(allocationArray[Math.floor(Math.random() * allocationArray.length)]);
-  }
-
-  return Array.from(wordsForQuiz);
-}
-
 function isCorrect(entry, definition) {
   const lowercaseDefinition = definition.toLowerCase();
   const definitionComponents = lowercaseDefinition.split(/,\s|,/g);
@@ -148,8 +121,7 @@ class Practice extends Component {
       dictionary,
     } = this.props;
 
-    const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
-    if (dictionary.data.length) startPractice(wordsForQuiz);
+    if (dictionary.data.length) startPractice();
   }
 
   componentDidUpdate(prevProps) {
@@ -159,8 +131,7 @@ class Practice extends Component {
     } = this.props;
 
     if (!prevProps.dictionary.data.length && dictionary.initialized && dictionary.data.length) {
-      const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
-      startPractice(wordsForQuiz);
+      startPractice();
     }
   }
 
