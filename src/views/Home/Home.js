@@ -34,7 +34,7 @@ function Home({ dictionary }) {
     <Container>
       <Heading>Vocabulary builder</Heading>
       <Description>
-        This is a web aplication designed
+        This is a web application designed
         to help you store and practice new
         words you learn when studying a
         foreign language.
