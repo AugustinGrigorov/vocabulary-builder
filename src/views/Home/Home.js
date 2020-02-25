@@ -50,7 +50,7 @@ function Home({ dictionary }) {
             Practice attempts:
             {' '}
             <b>
-              {dictionary.data.reduce((total, item) => total + item.attempts.length, 0)}
+              {dictionary.data.reduce((total, { attempts = [] }) => total + attempts.length, 0)}
             </b>
           </p>
         </>
