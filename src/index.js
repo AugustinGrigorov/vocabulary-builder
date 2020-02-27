@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import * as Sentry from '@sentry/browser';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
@@ -13,6 +14,8 @@ import {
   faSearch,
   faPlusCircle,
   faPenSquare,
+  faTimesCircle,
+  faCommentAlt,
 } from '@fortawesome/free-solid-svg-icons';
 
 import rootReducer from './reducers';
@@ -29,7 +32,11 @@ library.add(
   faSearch,
   faPlusCircle,
   faPenSquare,
+  faTimesCircle,
+  faCommentAlt,
 );
+
+Sentry.init({ dsn: 'https://b99e1867e4ee4002b9bb2b047d2f1080@sentry.io/2851266' });
 
 const reduxDevtoolsExtensionHook = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';
 const composeEnhancers = window[reduxDevtoolsExtensionHook] || compose;

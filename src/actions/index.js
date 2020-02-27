@@ -178,10 +178,39 @@ export function nextWord() {
   };
 }
 
-export function startPractice(wordQueue) {
-  return {
-    type: actions.START_QUIZ,
-    wordQueue,
+function getWeakestWords(dictionaryData, amount) {
+  const wordsForQuiz = new Set();
+  const allocationArray = [];
+  const newEntries = [];
+
+  dictionaryData.forEach((entry) => {
+    if (entry.strength === 1) newEntries.push(entry);
+    const allocatationRatio = 1 / entry.strength;
+    const allocations = Math.ceil(allocatationRatio * 100);
+    for (let i = 0; i < allocations; i += 1) {
+      allocationArray.push(entry);
+    }
+  });
+
+  newEntries.slice(0, amount).forEach((entry) => {
+    wordsForQuiz.add(entry);
+  });
+
+  while (wordsForQuiz.size < dictionaryData.length && wordsForQuiz.size < amount) {
+    wordsForQuiz.add(allocationArray[Math.floor(Math.random() * allocationArray.length)]);
+  }
+
+  return Array.from(wordsForQuiz);
+}
+
+export function startPractice() {
+  return (dispatch, getState) => {
+    const { dictionary } = getState();
+
+    dispatch({
+      type: actions.START_QUIZ,
+      wordQueue: getWeakestWords(dictionary.data, 10),
+    });
   };
 }
 
@@ -210,6 +239,18 @@ export function recordAttempt({ userId, entryId, correct }) {
         correct,
         timestamp: new Date(),
       }),
+    });
+  };
+}
+
+export function sumbitFeedback({ email, feedback }) {
+  return () => {
+    const feedbackId = nanoid();
+    const feedbackRef = db.collection('feedback').doc(feedbackId);
+    feedbackRef.set({
+      email,
+      feedback,
+      timestamp: new Date(),
     });
   };
 }

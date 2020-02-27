@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components/macro';
+import styled from 'styled-components/macro';
+import { buttonBaseStyle } from '../../genericComponents/styles';
 
 import {
   nextWord as nextWordAction,
@@ -19,19 +20,6 @@ const initialState = {
   hasUsedHint: false,
   grade: null,
 };
-
-const buttonBaseStyle = css`
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 8px 16px;
-  border: none;
-  text-align: center;
-  border-radius: 18px;
-  text-transform: uppercase;
-  margin: 12px auto;
-  color: #FFF;
-`;
 
 const NextButton = styled.button`
   ${buttonBaseStyle}
@@ -108,33 +96,6 @@ const Answer = styled.input`
   }}
 `;
 
-const amountOfWordsForQuiz = 10;
-
-function getWeakestWords(dictionaryData, amount) {
-  const wordsForQuiz = new Set();
-  const allocationArray = [];
-  const newEntries = [];
-
-  dictionaryData.forEach((entry) => {
-    if (entry.strength === 1) newEntries.push(entry);
-    const allocatationRatio = 1 / entry.strength;
-    const allocations = Math.ceil(allocatationRatio * 100);
-    for (let i = 0; i < allocations; i += 1) {
-      allocationArray.push(entry);
-    }
-  });
-
-  newEntries.slice(0, amount).forEach((entry) => {
-    wordsForQuiz.add(entry);
-  });
-
-  while (wordsForQuiz.size < dictionaryData.length && wordsForQuiz.size < amount) {
-    wordsForQuiz.add(allocationArray[Math.floor(Math.random() * allocationArray.length)]);
-  }
-
-  return Array.from(wordsForQuiz);
-}
-
 function isCorrect(entry, definition) {
   const lowercaseDefinition = definition.toLowerCase();
   const definitionComponents = lowercaseDefinition.split(/,\s|,/g);
@@ -168,8 +129,7 @@ class Practice extends Component {
       dictionary,
     } = this.props;
 
-    const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
-    if (dictionary.data.length) startPractice(wordsForQuiz);
+    if (dictionary.data.length) startPractice();
   }
 
   componentDidUpdate(prevProps) {
@@ -179,8 +139,7 @@ class Practice extends Component {
     } = this.props;
 
     if (!prevProps.dictionary.data.length && dictionary.initialized && dictionary.data.length) {
-      const wordsForQuiz = getWeakestWords(dictionary.data, amountOfWordsForQuiz);
-      startPractice(wordsForQuiz);
+      startPractice();
     }
   }
 
