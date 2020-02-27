@@ -14,10 +14,12 @@ import {
 } from '../constants';
 
 const db = firestore();
+
 if (process.env.REACT_APP_ENV === 'test') {
   db.settings({
     host: 'localhost:8080',
     ssl: false,
+    experimentalForceLongPolling: true,
   });
 }
 

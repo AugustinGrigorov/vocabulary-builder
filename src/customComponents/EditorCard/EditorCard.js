@@ -18,6 +18,7 @@ const AddIcon = styled(FontAwesomeIcon)`
 function EditorCard() {
   return (
     <Card
+      editor
       front={<Word><AddIcon icon="plus-circle" /></Word>}
       back={<WordForm />}
     />
