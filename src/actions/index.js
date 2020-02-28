@@ -15,6 +15,14 @@ import {
 
 const db = firestore();
 
+if (process.env.REACT_APP_ENV === 'test') {
+  db.settings({
+    host: 'localhost:8080',
+    ssl: false,
+    experimentalForceLongPolling: true,
+  });
+}
+
 function receiveDictionary(dictionary) {
   return {
     type: actions.RECEIVE_DICTIONARY,
@@ -126,7 +134,7 @@ function requestUserDetails() {
   };
 }
 
-function receiveUserDetails(userDetails) {
+export function receiveUserDetails(userDetails) {
   return {
     type: actions.RECEIVE_USER_DETAILS,
     userDetails,

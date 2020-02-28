@@ -82,8 +82,13 @@ class Card extends Component {
       back,
       theme,
       queued,
+      editor,
     } = this.props;
     const { flipped } = this.state;
+
+    const cypressProperties = [];
+    if (queued) cypressProperties.push('pending');
+    if (editor) cypressProperties.push('editor');
 
     return (
       <Container
@@ -93,6 +98,7 @@ class Card extends Component {
         role="button"
         ref={this.elementReferece}
         queued={queued}
+        data-cy={cypressProperties.join(' ')}
       >
         <Body
           focused={flipped}
@@ -122,6 +128,7 @@ Card.propTypes = {
     color: PropTypes.string,
   }),
   queued: PropTypes.bool,
+  editor: PropTypes.bool,
 };
 
 Card.defaultProps = {
@@ -129,6 +136,7 @@ Card.defaultProps = {
     borderColor: '#9E9E9E',
   },
   queued: false,
+  editor: false,
 };
 
 export default Card;
