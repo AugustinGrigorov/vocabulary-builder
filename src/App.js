@@ -63,11 +63,12 @@ class App extends Component {
       fetchDictionaryForUser,
       receiveUserDetails,
     } = this.props;
-    if (process.env.REACT_APP_ENV !== 'test') {
-      listenForAuthChanges();
-    } else {
+
+    if (window.Cypress) {
       receiveUserDetails(testUserDetails);
       fetchDictionaryForUser(testUserDetails.uid);
+    } else {
+      listenForAuthChanges();
     }
   }
 
