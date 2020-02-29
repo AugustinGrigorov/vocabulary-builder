@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { css } from 'styled-components/macro';
 
 export const buttonBaseStyle = css`

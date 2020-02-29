@@ -36,8 +36,6 @@ library.add(
   faCommentAlt,
 );
 
-Sentry.init({ dsn: 'https://b99e1867e4ee4002b9bb2b047d2f1080@sentry.io/2851266' });
-
 const reduxDevtoolsExtensionHook = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';
 const composeEnhancers = window[reduxDevtoolsExtensionHook] || compose;
 
@@ -47,6 +45,12 @@ const store = createStore(
     applyMiddleware(thunk),
   ),
 );
+
+if (window.Cypress) {
+  window.store = store;
+} else {
+  Sentry.init({ dsn: 'https://b99e1867e4ee4002b9bb2b047d2f1080@sentry.io/2851266' });
+}
 
 ReactDOM.render(
   <Provider store={store}>

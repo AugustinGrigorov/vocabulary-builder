@@ -15,7 +15,7 @@ import {
 
 const db = firestore();
 
-if (process.env.REACT_APP_ENV === 'test') {
+if (window.Cypress) {
   db.settings({
     host: 'localhost:8080',
     ssl: false,
