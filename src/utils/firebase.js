@@ -27,7 +27,8 @@ const provider = new auth.GoogleAuthProvider();
 
 const initiateSignIn = () => auth().signInWithPopup(provider);
 const initiateSignOut = () => auth().signOut();
-const authChangeListener = (cb) => auth().onAuthStateChanged(cb);
+const authChangeListener = (cb, handleError) => auth().onAuthStateChanged(cb)
+  .catch(() => handleError());
 
 export {
   initiateSignIn,

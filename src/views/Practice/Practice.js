@@ -180,37 +180,34 @@ class Practice extends Component {
       correct,
     } = this.props;
     if (!dictionary.initialized) return <Loading />;
-    if (dictionary.initialized && !dictionary.data.length) return <Error message="No words in dictionary." />;
+    if (!dictionary.data.length) return <Error message="No words in dictionary." />;
     if (!currentEntry) return <Result attempted={attempted} correct={correct} />;
     return (
       <PracticeBox grade={grade}>
-        {currentEntry
-          ? (
-            <Form
-              onSubmit={this.handleSubmit}
-            >
-              <h2>{currentEntry.word}</h2>
-              <Answer
-                id="submission"
-                grade={grade}
-                autoCapitalize="none"
-                name="submission"
-                placeholder="Answer"
-                type="text"
-                onChange={this.handleChange}
-                value={submission}
-              />
-              {!(hasUsedHint || grade === 'correct') ? (
-                <SubmitButton type="submit" value="Submit" />
-              ) : null}
-              <NextStep
-                hasUsedHint={hasUsedHint}
-                grade={grade}
-                loadNextWord={this.loadNextWord}
-                revealWord={this.revealWord}
-              />
-            </Form>
+        <Form
+          onSubmit={this.handleSubmit}
+        >
+          <h2>{currentEntry.word}</h2>
+          <Answer
+            id="submission"
+            grade={grade}
+            autoCapitalize="none"
+            name="submission"
+            placeholder="Answer"
+            type="text"
+            onChange={this.handleChange}
+            value={submission}
+          />
+          {!(hasUsedHint || grade === 'correct') ? (
+            <SubmitButton type="submit" value="Submit" />
           ) : null}
+          <NextStep
+            hasUsedHint={hasUsedHint}
+            grade={grade}
+            loadNextWord={this.loadNextWord}
+            revealWord={this.revealWord}
+          />
+        </Form>
       </PracticeBox>
     );
   }
@@ -268,7 +265,7 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = (dispatch) => ({
-  startPractice: (wordQueue) => dispatch(startPracticeAction(wordQueue)),
+  startPractice: () => dispatch(startPracticeAction()),
   nextWord: () => dispatch(nextWordAction()),
   updateScore: (attempted, correct) => dispatch(updateScoreAction({ attempted, correct })),
   recordAttempt: (

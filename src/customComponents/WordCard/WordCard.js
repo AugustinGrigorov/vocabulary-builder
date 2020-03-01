@@ -82,7 +82,6 @@ const Example = styled.p`
 `;
 
 function WordCard({
-  key,
   user,
   entry,
   removeWord,
@@ -102,7 +101,6 @@ function WordCard({
 
   return (
     <Card
-      key={key}
       queued={queued}
       theme={itemTheme}
       front={
@@ -178,13 +176,11 @@ WordCard.propTypes = {
   removeWord: PropTypes.func.isRequired,
   startEdit: PropTypes.func.isRequired,
   editedEntryId: PropTypes.string,
-  key: PropTypes.string,
   queued: PropTypes.bool,
 };
 
 WordCard.defaultProps = {
   editedEntryId: null,
-  key: null,
   queued: false,
 };
 

@@ -308,7 +308,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   editEntry: (payload) => dispatch(editEntryAction(payload)),
   addEntry: (payload) => dispatch(addEntryAction(payload)),
-  finishEdit: (payload) => dispatch(finishEditAction(payload)),
+  finishEdit: () => dispatch(finishEditAction()),
 });
 
 export default connect(
