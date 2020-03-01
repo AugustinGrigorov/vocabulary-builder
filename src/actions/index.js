@@ -113,10 +113,20 @@ export function editEntry({
     dispatch(finishEdit());
     dispatch(removeEntry(oldEntry));
     dispatch(queueEntryForAddition(newEntry));
-    const updateData = { ...newEntry };
-    delete updateData.id;
     const entryRef = db.collection('users').doc(userId).collection('words').doc(oldEntry.id);
-    entryRef.update(updateData).then(() => dispatch(fetchDictionaryForUser(userId)));
+    entryRef.update((({
+      word,
+      type,
+      definition,
+      example,
+      theme,
+    }) => ({
+      word,
+      type,
+      definition,
+      example,
+      theme,
+    }))(newEntry)).then(() => dispatch(fetchDictionaryForUser(userId)));
   };
 }
 
@@ -170,7 +180,8 @@ export function listenForAuthChanges() {
     authChangeListener((user) => {
       dispatch(receiveUserDetails(user));
       if (user) dispatch(fetchDictionaryForUser(user.uid));
-    }, () => userDetailsRequestFailed());
+      else userDetailsRequestFailed();
+    });
   };
 }
 
