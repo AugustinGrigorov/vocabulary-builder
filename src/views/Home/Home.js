@@ -29,6 +29,10 @@ const Description = styled.p`
   font-size: 18px;
 `;
 
+const Link = styled.a`
+  color: #fff;
+`;
+
 function Home({ dictionary }) {
   return (
     <Container>
@@ -55,6 +59,14 @@ function Home({ dictionary }) {
           </p>
         </>
       ) : null}
+      <p>
+        Icons made by
+        {' '}
+        <Link href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</Link>
+        {' '}
+        from
+        <Link href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</Link>
+      </p>
     </Container>
   );
 }
