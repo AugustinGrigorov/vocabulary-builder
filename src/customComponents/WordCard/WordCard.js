@@ -5,7 +5,7 @@ import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
-  removeWord as removeWordAction,
+  removeEntry as removeEntryAction,
   startEdit as startEditAction,
 } from '../../actions';
 import { userType } from '../../types';
@@ -84,7 +84,7 @@ const Example = styled.p`
 function WordCard({
   user,
   entry,
-  removeWord,
+  removeEntry,
   startEdit,
   editedEntryId,
   queued,
@@ -112,7 +112,7 @@ function WordCard({
         <WordForm entry={entry} />
       ) : (
         <DisplayContent
-          removeWord={removeWord}
+          removeEntry={removeEntry}
           startEdit={startEdit}
           entry={entry}
           userId={user.details.uid}
@@ -123,7 +123,7 @@ function WordCard({
 }
 
 function DisplayContent({
-  removeWord,
+  removeEntry,
   startEdit,
   entry,
   userId,
@@ -140,7 +140,7 @@ function DisplayContent({
         <ControlButtonWrapper type="button" onClick={() => startEdit(entry.id)}>
           <EditButton icon="pen-square" />
         </ControlButtonWrapper>
-        <ControlButtonWrapper type="button" onClick={() => removeWord({ entry, userId })}>
+        <ControlButtonWrapper type="button" onClick={() => removeEntry({ entry, userId })}>
           <RemoveButton icon="minus-square" />
         </ControlButtonWrapper>
       </ButtonsContainer>
@@ -166,14 +166,14 @@ const entryPropType = PropTypes.shape({
 DisplayContent.propTypes = {
   entry: entryPropType.isRequired,
   userId: PropTypes.string.isRequired,
-  removeWord: PropTypes.func.isRequired,
+  removeEntry: PropTypes.func.isRequired,
   startEdit: PropTypes.func.isRequired,
 };
 
 WordCard.propTypes = {
   user: userType.isRequired,
   entry: entryPropType.isRequired,
-  removeWord: PropTypes.func.isRequired,
+  removeEntry: PropTypes.func.isRequired,
   startEdit: PropTypes.func.isRequired,
   editedEntryId: PropTypes.string,
   queued: PropTypes.bool,
@@ -190,7 +190,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  removeWord: (payload) => dispatch(removeWordAction(payload)),
+  removeEntry: (payload) => dispatch(removeEntryAction(payload)),
   startEdit: (payload) => dispatch(startEditAction(payload)),
 });
 

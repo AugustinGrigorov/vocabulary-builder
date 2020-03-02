@@ -15,4 +15,6 @@ export const actions = { // eslint-disable-line import/prefer-default-export
   UPDATE_SCORE: 'UPDATE_SCORE',
   UPDATE_ATTEMPTS: 'UPDATE_ATTEMPTS',
   NEXT_WORD: 'NEXT_WORD',
+  ADD_ENTRY: 'ADD_ENTRY',
+  START_FETCHING_DICTIONARY: 'START_FETCHING_DICTIONARY',
 };

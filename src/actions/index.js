@@ -23,6 +23,12 @@ if (window.Cypress) {
   });
 }
 
+function startFetchingDictionary() {
+  return {
+    type: actions.START_FETCHING_DICTIONARY,
+  };
+}
+
 function receiveDictionary(dictionary) {
   return {
     type: actions.RECEIVE_DICTIONARY,
@@ -44,22 +50,31 @@ function queueEntryForDeletion(entry) {
   };
 }
 
-function removeEntry(entry) {
+function removeEntryFromDictionary(entry) {
   return {
     type: actions.REMOVE_ENTRY,
     entry,
   };
 }
 
-function dequeueCompleted(dictionary) {
+function addEntryToDictionary(entry) {
+  return {
+    type: actions.ADD_ENTRY,
+    entry,
+  };
+}
+
+function dequeueCompleted(entry) {
   return {
     type: actions.DEQUEUE_COMPLETED,
-    dictionary,
+    entry,
   };
 }
 
 export function fetchDictionaryForUser(userId) {
   return (dispatch) => {
+    dispatch(startFetchingDictionary());
+
     const wordsCollectionSnapshot = db.collection('users').doc(userId).collection('words').get();
     wordsCollectionSnapshot.then((collection) => {
       const dictionary = collection.docs.map((entry) => (
@@ -69,24 +84,25 @@ export function fetchDictionaryForUser(userId) {
         }
       ));
       dispatch(receiveDictionary(dictionary));
-      dispatch(dequeueCompleted(dictionary));
     });
   };
 }
 
 export function addEntry({ entryData, userId }) {
   return (dispatch) => {
-    const entryId = nanoid();
-    dispatch(queueEntryForAddition({
-      id: entryId,
-      ...entryData,
-      strength: 0,
-    }));
-    const entryRef = db.collection('users').doc(userId).collection('words').doc(entryId);
-    entryRef.set({
-      ...entryData,
+    const entry = {
+      id: nanoid(),
       createdAt: new Date(),
-    }).then(() => dispatch(fetchDictionaryForUser(userId)));
+      strength: 0,
+      ...entryData,
+    };
+
+    dispatch(queueEntryForAddition(entry));
+    const entryRef = db.collection('users').doc(userId).collection('words').doc(entry.id);
+    entryRef.set(entry).then(() => {
+      dispatch(dequeueCompleted(entry));
+      dispatch(addEntryToDictionary(entry));
+    });
   };
 }
 
@@ -111,7 +127,7 @@ export function editEntry({
 }) {
   return async (dispatch) => {
     dispatch(finishEdit());
-    dispatch(removeEntry(oldEntry));
+    dispatch(removeEntryFromDictionary(oldEntry));
     dispatch(queueEntryForAddition(newEntry));
     const entryRef = db.collection('users').doc(userId).collection('words').doc(oldEntry.id);
     entryRef.update((({
@@ -126,15 +142,21 @@ export function editEntry({
       definition,
       example,
       theme,
-    }))(newEntry)).then(() => dispatch(fetchDictionaryForUser(userId)));
+    }))(newEntry)).then(() => {
+      dispatch(dequeueCompleted(newEntry));
+      dispatch(addEntryToDictionary(newEntry));
+    });
   };
 }
 
-export function removeWord({ entry, userId }) {
+export function removeEntry({ entry, userId }) {
   return (dispatch) => {
     dispatch(queueEntryForDeletion(entry));
     const entryRef = db.collection('users').doc(userId).collection('words').doc(entry.id);
-    entryRef.delete().then(() => dispatch(fetchDictionaryForUser(userId)));
+    entryRef.delete().then(() => {
+      dispatch(dequeueCompleted(entry));
+      dispatch(removeEntryFromDictionary(entry));
+    });
   };
 }
 

@@ -14,6 +14,11 @@ const dictionary = (state = {
   let attempts;
 
   switch (action.type) {
+    case actions.START_FETCHING_DICTIONARY:
+      return {
+        ...state,
+        initialized: false,
+      };
     case actions.RECEIVE_DICTIONARY:
       return {
         ...state,
@@ -29,6 +34,11 @@ const dictionary = (state = {
       return {
         ...state,
         data: dictionaryData.filter((entry) => entry.id !== action.entry.id),
+      };
+    case actions.ADD_ENTRY:
+      return {
+        ...state,
+        data: [action.entry, ...dictionaryData],
       };
     case actions.UPDATE_ATTEMPTS:
       for (let i = 0; i < dictionaryData.length; i += 1) {

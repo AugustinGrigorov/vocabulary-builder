@@ -18,7 +18,8 @@
           "!styled-components/macro"
         ]
       }
-    ]
+    ],
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/support/commands.js"]}]
   },
   "env": {
     "browser": true,
