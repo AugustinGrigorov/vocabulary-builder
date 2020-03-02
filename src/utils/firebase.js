@@ -20,8 +20,11 @@ const config = {
 };
 
 initializeApp(config);
-performance();
-analytics();
+
+if (window.location.hostname === 'vocabularybuilder.online') {
+  performance();
+  analytics();
+}
 
 const provider = new auth.GoogleAuthProvider();
 

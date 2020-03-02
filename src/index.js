@@ -48,7 +48,9 @@ const store = createStore(
 
 if (window.Cypress) {
   window.store = store;
-} else {
+}
+
+if (window.location.hostname === 'vocabularybuilder.online') {
   Sentry.init({ dsn: 'https://b99e1867e4ee4002b9bb2b047d2f1080@sentry.io/2851266' });
 }
 
