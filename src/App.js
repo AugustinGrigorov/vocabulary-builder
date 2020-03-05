@@ -4,7 +4,7 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   listenForAuthChanges as listenForAuthChangesAction,
-  fetchDictionaryForUser as fetchDictionaryForUserAction,
+  connectDictionary as connectDictionaryAction,
   receiveUserDetails as receiveUserDetailsAction,
 } from './actions';
 import NavigationBar from './customComponents/NavigationBar';
@@ -60,13 +60,13 @@ class App extends Component {
     super(props);
     const {
       listenForAuthChanges,
-      fetchDictionaryForUser,
+      connectDictionary,
       receiveUserDetails,
     } = this.props;
 
     if (window.Cypress) {
       receiveUserDetails(testUserDetails);
-      fetchDictionaryForUser(testUserDetails.uid);
+      connectDictionary(testUserDetails.uid);
     } else {
       listenForAuthChanges();
     }
@@ -122,7 +122,7 @@ App.propTypes = {
   listenForAuthChanges: PropTypes.func.isRequired,
   user: userType,
   receiveUserDetails: PropTypes.func.isRequired,
-  fetchDictionaryForUser: PropTypes.func.isRequired,
+  connectDictionary: PropTypes.func.isRequired,
 };
 
 App.defaultProps = {
@@ -132,7 +132,7 @@ App.defaultProps = {
 const mapDispatchToProps = (dispatch) => ({
   listenForAuthChanges: () => dispatch(listenForAuthChangesAction()),
   receiveUserDetails: (userDetails) => dispatch(receiveUserDetailsAction(userDetails)),
-  fetchDictionaryForUser: (userId) => dispatch(fetchDictionaryForUserAction(userId)),
+  connectDictionary: (userId) => dispatch(connectDictionaryAction(userId)),
 });
 
 const mapStateToProps = (state) => ({

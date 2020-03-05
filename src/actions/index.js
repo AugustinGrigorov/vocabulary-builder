@@ -22,16 +22,10 @@ if (window.Cypress) {
   });
 }
 
-db.enablePersistence({ synchronizeTabs: true })
+db.enablePersistence()
   .catch((err) => {
     captureException(err);
   });
-
-function startFetchingDictionary() {
-  return {
-    type: actions.START_FETCHING_DICTIONARY,
-  };
-}
 
 function receiveDictionary(dictionary) {
   return {
@@ -61,27 +55,20 @@ function removeEntryFromDictionary(entry) {
   };
 }
 
-function addEntryToDictionary(entry) {
-  return {
-    type: actions.ADD_ENTRY,
-    entry,
-  };
-}
-
-function dequeueCompleted(entry) {
+function dequeueCompleted(entryId) {
   return {
     type: actions.DEQUEUE_COMPLETED,
-    entry,
+    entryId,
   };
 }
 
-export function fetchDictionaryForUser(userId) {
+export function connectDictionary(userId) {
   return (dispatch) => {
-    dispatch(startFetchingDictionary());
-
-    const wordsCollectionSnapshot = db.collection('users').doc(userId).collection('words').get();
-    wordsCollectionSnapshot.then((collection) => {
-      const dictionary = collection.docs.map((entry) => (
+    db.collection('users').doc(userId).collection('words').onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach(({ doc }) => {
+        if (doc.data().id) dispatch(dequeueCompleted(doc.data().id));
+      });
+      const dictionary = snapshot.docs.map((entry) => (
         {
           id: entry.id,
           ...entry.data(),
@@ -103,10 +90,7 @@ export function addEntry({ entryData, userId }) {
 
     dispatch(queueEntryForAddition(entry));
     const entryRef = db.collection('users').doc(userId).collection('words').doc(entry.id);
-    entryRef.set(entry).then(() => {
-      dispatch(dequeueCompleted(entry));
-      dispatch(addEntryToDictionary(entry));
-    });
+    entryRef.set(entry);
   };
 }
 
@@ -146,10 +130,7 @@ export function editEntry({
       definition,
       example,
       theme,
-    }))(newEntry)).then(() => {
-      dispatch(dequeueCompleted(newEntry));
-      dispatch(addEntryToDictionary(newEntry));
-    });
+    }))(newEntry));
   };
 }
 
@@ -157,10 +138,7 @@ export function removeEntry({ entry, userId }) {
   return (dispatch) => {
     dispatch(queueEntryForDeletion(entry));
     const entryRef = db.collection('users').doc(userId).collection('words').doc(entry.id);
-    entryRef.delete().then(() => {
-      dispatch(dequeueCompleted(entry));
-      dispatch(removeEntryFromDictionary(entry));
-    });
+    entryRef.delete();
   };
 }
 
@@ -205,7 +183,7 @@ export function listenForAuthChanges() {
   return (dispatch) => {
     authChangeListener((user) => {
       dispatch(receiveUserDetails(user));
-      if (user) dispatch(fetchDictionaryForUser(user.uid));
+      if (user) dispatch(connectDictionary(user.uid));
       else userDetailsRequestFailed();
     });
   };

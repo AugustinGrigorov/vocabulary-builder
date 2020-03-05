@@ -21,6 +21,7 @@
 
 #cypress
 /cypress/videos
+/cypress/screenshots
 
 #logs
 npm-debug.log*

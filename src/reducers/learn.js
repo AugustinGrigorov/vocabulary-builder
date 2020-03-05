@@ -21,10 +21,10 @@ const learn = (state = {
     case actions.DEQUEUE_COMPLETED:
       return {
         entryAdditionQueue: state.entryAdditionQueue.filter(
-          ({ id }) => id !== action.entry.id,
+          ({ id }) => id !== action.entryId,
         ),
         entryDeletionQueueIds: state.entryDeletionQueueIds.filter(
-          (id) => id !== action.entry.id,
+          (id) => id !== action.entryId,
         ),
       };
     case actions.START_EDIT:

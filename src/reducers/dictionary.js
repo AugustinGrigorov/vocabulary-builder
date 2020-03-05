@@ -14,11 +14,6 @@ const dictionary = (state = {
   let attempts;
 
   switch (action.type) {
-    case actions.START_FETCHING_DICTIONARY:
-      return {
-        ...state,
-        initialized: false,
-      };
     case actions.RECEIVE_DICTIONARY:
       return {
         ...state,
