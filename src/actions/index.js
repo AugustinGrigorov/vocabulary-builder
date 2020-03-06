@@ -1,7 +1,6 @@
 import nanoid from 'nanoid';
 import { firestore } from 'firebase/app';
 import 'firebase/firestore';
-import { captureException } from '@sentry/browser';
 
 import {
   initiateSignIn,
@@ -21,11 +20,6 @@ if (window.Cypress) {
     experimentalForceLongPolling: true,
   });
 }
-
-db.enablePersistence()
-  .catch((err) => {
-    captureException(err);
-  });
 
 function receiveDictionary(dictionary) {
   return {
